@@ -2,7 +2,8 @@
 {
     public class EmailOptions
     {
-        public string From { get; set; }
+        public string FromEmail { get; set; }
+        public string FromName { get; set; }
         public SmtpOptions Smtp { get; set; }
     }
 }
