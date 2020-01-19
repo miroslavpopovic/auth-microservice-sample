@@ -7,7 +7,7 @@ namespace Auth.Email
 {
     public class EmailSender : IEmailSender
     {
-        private EmailOptions _options;
+        private readonly EmailOptions _options;
 
         public EmailSender(IOptions<EmailOptions> options)
         {
