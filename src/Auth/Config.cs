@@ -16,7 +16,7 @@ namespace Auth
         public static IEnumerable<ApiResource> Apis =>
             new List<ApiResource>
             {
-                new ApiResource("api1", "API 1")
+                new ApiResource("weather-api", "Weather API")
             };
 
         public static IEnumerable<Client> Clients =>
@@ -25,11 +25,21 @@ namespace Auth
                 // Machine to machine client
                 new Client
                 {
-                    ClientId = "non-user-client",
+                    ClientId = "weather-api-console-client",
                     ClientSecrets = {new Secret("secret".Sha256())},
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    AllowedScopes = {"api1"}
+                    AllowedScopes = {"weather-api"}
+                },
+
+                // Machine to machine client
+                new Client
+                {
+                    ClientId = "weather-api-worker-client",
+                    ClientSecrets = {new Secret("secret".Sha256())},
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedScopes = {"weather-api"}
                 },
 
                 // interactive ASP.NET MVC Core client
@@ -52,7 +62,7 @@ namespace Auth
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "weather-api"
                     },
 
                     AllowOfflineAccess = true
@@ -75,7 +85,7 @@ namespace Auth
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "api1"
+                        "weather-api"
                     }
                 }
             };

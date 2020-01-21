@@ -1,0 +1,10 @@
+﻿{
+  "profiles": {
+    "Samples.WeatherApi.WorkerClient": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "DOTNET_ENVIRONMENT": "Development"
+      }
+    }
+  }
+}
