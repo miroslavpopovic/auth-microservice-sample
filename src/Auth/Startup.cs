@@ -2,7 +2,6 @@ using Auth.Data;
 using Auth.Email;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +26,26 @@ namespace Auth
                     options.UseSqlServer(
                         Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<AuthUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services
+                .AddDefaultIdentity<AuthUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services
+                .AddIdentityServer(
+                    options =>
+                    {
+                        options.Events.RaiseErrorEvents = true;
+                        options.Events.RaiseFailureEvents = true;
+                        options.Events.RaiseInformationEvents = true;
+                        options.Events.RaiseSuccessEvents = true;
+                    })
+                .AddInMemoryIdentityResources(Config.Ids)
+                .AddInMemoryApiResources(Config.Apis)
+                .AddInMemoryClients(Config.Clients)
+                .AddAspNetIdentity<AuthUser>()
+                .AddDeveloperSigningCredential();
+
+            services.AddAuthentication();
 
             services.AddEmail(Configuration);
 
@@ -55,7 +72,7 @@ namespace Auth
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
