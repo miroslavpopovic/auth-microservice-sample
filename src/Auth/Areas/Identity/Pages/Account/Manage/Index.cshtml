@@ -1,7 +1,7 @@
 ﻿@page
 @using Microsoft.Extensions.Configuration
 @model IndexModel
-@inject IConfiguration configuration
+@inject IConfiguration Configuration
 @{
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
@@ -26,7 +26,7 @@
             {
                 <div class="form-group">
                     <label asp-for="ProfileImageName"></label>
-                    <img src="~/@configuration["Paths:ProfileImages"]/@Model.ProfileImageName" class="img-thumbnail" />
+                    <img src="~/@Configuration["Paths:ProfileImages"]/@Model.ProfileImageName" class="img-thumbnail" />
                 </div>
             }
             <div class="form-group">
