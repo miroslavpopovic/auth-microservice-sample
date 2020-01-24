@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Samples.WeatherApi.MvcClient.Models;
@@ -26,6 +28,13 @@ namespace Samples.WeatherApi.MvcClient.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult Logout()
+        {
+            return SignOut(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                OpenIdConnectDefaults.AuthenticationScheme);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

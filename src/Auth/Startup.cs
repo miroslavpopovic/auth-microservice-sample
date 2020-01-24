@@ -1,11 +1,15 @@
 using Auth.Data;
 using Auth.Email;
+using IdentityServer4;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Auth
 {
@@ -45,7 +49,34 @@ namespace Auth
                 .AddAspNetIdentity<AuthUser>()
                 .AddDeveloperSigningCredential();
 
-            services.AddAuthentication();
+            services
+                .AddAuthentication()
+                .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+                {
+                    // We are leaving the default auth scheme
+                    //options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+
+                    options.ClientId = Configuration["Providers:Google:ClientId"];
+                    options.ClientSecret = Configuration["Providers:Google:ClientSecret"];
+                })
+                .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, "Demo IdentityServer", options =>
+                {
+                    // We are leaving the default auth scheme
+                    //options.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                    //options.SignOutScheme = IdentityServerConstants.SignoutScheme;
+                    options.SaveTokens = true;
+
+                    options.Authority = "https://demo.identityserver.io/";
+                    options.ClientId = Configuration["Providers:IdentityServerDemo:ClientId"];
+                    options.ClientSecret = Configuration["Providers:IdentityServerDemo:ClientSecret"];
+                    options.ResponseType = "code";
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        NameClaimType = "name",
+                        RoleClaimType = "role"
+                    };
+                });
 
             services.AddEmail(Configuration);
 
