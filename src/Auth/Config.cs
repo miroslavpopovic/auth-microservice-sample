@@ -42,6 +42,16 @@ namespace Auth
                     AllowedScopes = {"weather-api"}
                 },
 
+                // Machine to machine client
+                new Client
+                {
+                    ClientId = "weather-api-mvc-client",
+                    ClientSecrets = {new Secret("secret".Sha256())},
+
+                    AllowedGrantTypes = GrantTypes.ClientCredentials,
+                    AllowedScopes = {"weather-api"}
+                },
+
                 // interactive ASP.NET MVC Core client
                 new Client
                 {

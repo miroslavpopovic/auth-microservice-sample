@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Polly;
 
 namespace Samples.WeatherApi.MvcClient
 {
@@ -50,6 +52,35 @@ namespace Samples.WeatherApi.MvcClient
                         options.Scope.Add("weather-api");
                         options.Scope.Add("offline_access");
                     });
+
+            // Register and configure Token Management and Weather API HTTP clients for DI
+            // This is using a separate Client to access API using Client Credentials
+            services
+                .AddAccessTokenManagement(
+                    options =>
+                    {
+                        options.Client.Clients.Add(
+                            "auth", new ClientCredentialsTokenRequest
+                            {
+                                Address = "https://localhost:44396/connect/token",
+                                ClientId = "weather-api-mvc-client",
+                                ClientSecret = "secret",
+                                Scope = "weather-api"
+                            });
+                    })
+                .ConfigureBackchannelHttpClient()
+                .AddTransientHttpErrorPolicy(
+                    policy =>
+                        policy.WaitAndRetryAsync(
+                            new[]
+                            {
+                                TimeSpan.FromSeconds(1),
+                                TimeSpan.FromSeconds(2),
+                                TimeSpan.FromSeconds(3)
+                            }));
+            services.AddClientAccessTokenClient(
+                "weather-api-client",
+                configureClient: client => { client.BaseAddress = new Uri("https://localhost:44373/"); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
