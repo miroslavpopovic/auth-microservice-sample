@@ -46,6 +46,9 @@ namespace Samples.WeatherApi.MvcClient
                         options.ResponseType = "code";
 
                         options.SaveTokens = true;
+
+                        options.Scope.Add("weather-api");
+                        options.Scope.Add("offline_access");
                     });
         }
 
