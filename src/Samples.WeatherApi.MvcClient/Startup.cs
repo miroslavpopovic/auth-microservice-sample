@@ -50,6 +50,7 @@ namespace Samples.WeatherApi.MvcClient
                         options.SaveTokens = true;
 
                         options.Scope.Add("weather-api");
+                        options.Scope.Add("weather-summary-api");
                         options.Scope.Add("offline_access");
                     });
 
@@ -78,9 +79,14 @@ namespace Samples.WeatherApi.MvcClient
                                 TimeSpan.FromSeconds(2),
                                 TimeSpan.FromSeconds(3)
                             }));
+
             services.AddClientAccessTokenClient(
                 "weather-api-client",
                 configureClient: client => { client.BaseAddress = new Uri("https://localhost:44373/"); });
+
+            services.AddClientAccessTokenClient(
+                "weather-summary-api-client",
+                configureClient: client => { client.BaseAddress = new Uri("https://localhost:44303/"); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -16,7 +16,8 @@ namespace Auth
         public static IEnumerable<ApiResource> Apis =>
             new List<ApiResource>
             {
-                new ApiResource("weather-api", "Weather API")
+                new ApiResource("weather-api", "Weather API"),
+                new ApiResource("weather-summary-api", "Weather Summary API")
             };
 
         public static IEnumerable<Client> Clients =>
@@ -49,7 +50,7 @@ namespace Auth
                     ClientSecrets = {new Secret("secret".Sha256())},
 
                     AllowedGrantTypes = GrantTypes.ClientCredentials,
-                    AllowedScopes = {"weather-api"}
+                    AllowedScopes = {"weather-api", "weather-summary-api"}
                 },
 
                 // interactive ASP.NET MVC Core client
@@ -72,7 +73,8 @@ namespace Auth
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Profile,
-                        "weather-api"
+                        "weather-api",
+                        "weather-summary-api"
                     },
 
                     AllowOfflineAccess = true

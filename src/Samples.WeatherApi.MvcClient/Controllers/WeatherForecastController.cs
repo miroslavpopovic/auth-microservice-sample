@@ -10,11 +10,14 @@ namespace Samples.WeatherApi.MvcClient.Controllers
     public class WeatherForecastController : Controller
     {
         private const string WeatherForecastApiUrl = "https://localhost:44373/weatherforecast";
-        private readonly HttpClient _httpClient;
+        private const string WeatherSummaryApiUrl = "https://localhost:44303/weathersummary";
+        private readonly HttpClient _forecastClient;
+        private readonly HttpClient _summaryClient;
 
         public WeatherForecastController(IHttpClientFactory clientFactory)
         {
-            _httpClient = clientFactory.CreateClient("weather-api-client");
+            _forecastClient = clientFactory.CreateClient("weather-api-client");
+            _summaryClient = clientFactory.CreateClient("weather-summary-api-client");
         }
 
         public async Task<IActionResult> Index()
@@ -40,9 +43,21 @@ namespace Samples.WeatherApi.MvcClient.Controllers
             // This is using a separate API Client to get access token
             // for accessing Weather API using the Client Credentials
 
-            var content = await _httpClient.GetStringAsync(WeatherForecastApiUrl);
+            var content = await _forecastClient.GetStringAsync(WeatherForecastApiUrl);
 
             ViewBag.WeatherForecastData = JArray.Parse(content).ToString();
+
+            return View();
+        }
+
+        public async Task<IActionResult> Summary()
+        {
+            // This is using a separate API Client to get access token
+            // for accessing Weather API using the Client Credentials
+
+            var content = await _forecastClient.GetStringAsync(WeatherSummaryApiUrl);
+
+            ViewBag.WeatherSummaryData = JObject.Parse(content).ToString();
 
             return View();
         }
