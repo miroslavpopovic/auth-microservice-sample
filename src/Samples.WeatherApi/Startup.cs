@@ -37,7 +37,7 @@ namespace Samples.WeatherApi
                         "default", policy =>
                         {
                             policy
-                                .WithOrigins("https://localhost:44222")
+                                .WithOrigins("https://localhost:44336")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                         });

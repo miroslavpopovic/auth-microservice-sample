@@ -10,6 +10,8 @@
   "dependencies": {
     "aurelia-animator-css": "^1.0.4",
     "aurelia-bootstrapper": "^2.3.2",
+    "aurelia-fetch-client": "^1.8.2",
+    "bootstrap": "^4.4.1",
     "oidc-client": "^1.10.1"
   },
   "devDependencies": {

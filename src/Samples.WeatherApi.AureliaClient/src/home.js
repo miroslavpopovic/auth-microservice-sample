@@ -1,36 +1,57 @@
+import { HttpClient } from 'aurelia-fetch-client';
 import { inject } from 'aurelia-framework';
 import Oidc from 'oidc-client';
 
-@inject(Oidc)
+@inject(Oidc.UserManager, HttpClient)
 export class App {
-    constructor(oidc) {
-        this.oidc = oidc;
+    constructor(userManager, httpClient) {
+        this.error = '';
         this.message = '';
 
-        this.initializeUserManager();
+        this.userManager = userManager;
+        this.httpClient = httpClient;
+
+        this.displayUserInfo();
     }
 
-    initializeUserManager() {
-        const config = {
-            authority: 'https://localhost:44396',
-            client_id: 'aurelia',
-            redirect_uri: 'https://localhost:44336/login',
-            response_type: 'code',
-            scope: 'openid profile weather-api',
-            post_logout_redirect_uri: 'https://localhost:44336/',
-        };
+    callApi() {
+        this.httpClient
+            .fetch('weatherforecast')
+            .then(response => response.json())
+            .then(forecasts => {
+                this.error = '';
+                this.message = 'Data loaded successfully';
+                this.result = JSON.stringify(forecasts, null, 2);
+            })
+            .catch(error => {
+                this.error = `Error loading data: ${error}`;
+                this.message = '';
+            });
+    }
 
-        this.userManager = new Oidc.UserManager(config);
-        this.userManager.getUser().then(user => {
-            if (user) {
-                console.log('User logged in', user.profile);
-            } else {
-                console.log('User not logged in');
-            }
-        });
+    displayUserInfo() {
+        this.userManager.getUser()
+            .then(user => {
+                if (user) {
+                    this.error = '';
+                    this.message = `User logged in: ${user.profile.name}`;
+                    console.log(user.profile);
+                } else {
+                    this.error = 'User not logged in!';
+                    this.message = '';
+                }
+            })
+            .catch(error => {
+                this.error = `Error loading user data: ${error}`;
+                this.message = '';
+            });
     }
 
     login() {
         this.userManager.signinRedirect();
+    }
+
+    logout() {
+        this.userManager.signoutRedirect();
     }
 }

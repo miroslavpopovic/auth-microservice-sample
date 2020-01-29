@@ -11,8 +11,8 @@ You also need to modify the user secrets for `Auth` project. It should look like
     {
       "Providers": {
         "Google": {
-          "ClientId": "",
-          "ClientSecret": ""
+          "ClientId": "<google_app_client_id>",
+          "ClientSecret": "<google_app_client_secret>"
         },
         "IdentityServerDemo": {
           "ClientId": "native.code",

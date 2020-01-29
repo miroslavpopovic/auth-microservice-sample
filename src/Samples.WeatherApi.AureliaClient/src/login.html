@@ -1,3 +1,8 @@
 ﻿<template>
-    Logging in...
+    <div class="alert alert-info" if.bind="!error">
+        Logging in...
+    </div>
+    <div class="alert alert-danger" if.bind="error">
+        ${error}
+    </div>
 </template>

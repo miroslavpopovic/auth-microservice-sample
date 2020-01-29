@@ -1,11 +1,17 @@
 <template>
     <h1>Aurelia Client</h1>
 
-    <button click.delegate="login()">Login</button>
-    <button click.delegate="callApi()">Call API</button>
-    <button click.delegate="logout()">Logout</button>
+    <hr />
 
-    <div>${message}</div>
+    <div if.bind="error" class="alert alert-danger">${error}</div>
+    <div if.bind="message" class="alert alert-info">${message}</div>
 
-    <pre id="results"></pre>
+    <pre if.bind="result"><code>${result}</code></pre>
+
+    <hr />
+
+    <button class="btn btn-secondary" click.delegate="login()">Login</button>
+    <button class="btn btn-secondary" click.delegate="callApi()">Call API</button>
+    <button class="btn btn-secondary" click.delegate="logout()">Logout</button>
+
 </template>

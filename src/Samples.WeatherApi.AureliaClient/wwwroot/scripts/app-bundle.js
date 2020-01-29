@@ -35,7 +35,7 @@ define('app',["exports"], function (_exports) {
 
   _exports.App = App;
 });;
-define('text!app.html',[],function(){return "<template>\n    <div>\n        <router-view></router-view>\n    </div>\n</template>\n";});;
+define('text!app.html',[],function(){return "<template>\r\n    <require from=\"bootstrap/css/bootstrap.min.css\"></require>\r\n    <main class=\"container\">\r\n        <div>\r\n            <router-view></router-view>\r\n        </div>\r\n    </main>\r\n</template>\r\n";});;
 define('environment',["exports"], function (_exports) {
   "use strict";
 
@@ -47,7 +47,7 @@ define('environment',["exports"], function (_exports) {
   };
   _exports.default = _default;
 });;
-define('home',["exports", "aurelia-framework", "oidc-client"], function (_exports, _aureliaFramework, _oidcClient) {
+define('home',["exports", "aurelia-fetch-client", "aurelia-framework", "oidc-client"], function (_exports, _aureliaFetchClient, _aureliaFramework, _oidcClient) {
   "use strict";
 
   _exports.__esModule = true;
@@ -58,33 +58,49 @@ define('home',["exports", "aurelia-framework", "oidc-client"], function (_export
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  var App = (_dec = (0, _aureliaFramework.inject)(_oidcClient.default), _dec(_class =
+  var App = (_dec = (0, _aureliaFramework.inject)(_oidcClient.default.UserManager, _aureliaFetchClient.HttpClient), _dec(_class =
   /*#__PURE__*/
   function () {
-    function App(oidc) {
-      this.oidc = oidc;
+    function App(userManager, httpClient) {
+      this.error = '';
       this.message = '';
-      this.initializeUserManager();
+      this.userManager = userManager;
+      this.httpClient = httpClient;
+      this.displayUserInfo();
     }
 
     var _proto = App.prototype;
 
-    _proto.initializeUserManager = function initializeUserManager() {
-      var config = {
-        authority: 'https://localhost:44396',
-        client_id: 'aurelia',
-        redirect_uri: 'https://localhost:44336/login',
-        response_type: 'code',
-        scope: 'openid profile weather-api',
-        post_logout_redirect_uri: 'https://localhost:44336/'
-      };
-      this.userManager = new _oidcClient.default.UserManager(config);
+    _proto.callApi = function callApi() {
+      var _this = this;
+
+      this.httpClient.fetch('weatherforecast').then(function (response) {
+        return response.json();
+      }).then(function (forecasts) {
+        _this.error = '';
+        _this.message = 'Data loaded successfully';
+        _this.result = JSON.stringify(forecasts, null, 2);
+      }).catch(function (error) {
+        _this.error = "Error loading data: " + error;
+        _this.message = '';
+      });
+    };
+
+    _proto.displayUserInfo = function displayUserInfo() {
+      var _this2 = this;
+
       this.userManager.getUser().then(function (user) {
         if (user) {
-          console.log('User logged in', user.profile);
+          _this2.error = '';
+          _this2.message = "User logged in: " + user.profile.name;
+          console.log(user.profile);
         } else {
-          console.log('User not logged in');
+          _this2.error = 'User not logged in!';
+          _this2.message = '';
         }
+      }).catch(function (error) {
+        _this2.error = "Error loading user data: " + error;
+        _this2.message = '';
       });
     };
 
@@ -92,11 +108,15 @@ define('home',["exports", "aurelia-framework", "oidc-client"], function (_export
       this.userManager.signinRedirect();
     };
 
+    _proto.logout = function logout() {
+      this.userManager.signoutRedirect();
+    };
+
     return App;
   }()) || _class);
   _exports.App = App;
 });;
-define('text!home.html',[],function(){return "<template>\n    <h1>Aurelia Client</h1>\n\n    <button click.delegate=\"login()\">Login</button>\n    <button click.delegate=\"callApi()\">Call API</button>\n    <button click.delegate=\"logout()\">Logout</button>\n\n    <div>${message}</div>\n\n    <pre id=\"results\"></pre>\n</template>\n";});;
+define('text!home.html',[],function(){return "<template>\r\n    <h1>Aurelia Client</h1>\r\n\r\n    <hr />\r\n\r\n    <div if.bind=\"error\" class=\"alert alert-danger\">${error}</div>\r\n    <div if.bind=\"message\" class=\"alert alert-info\">${message}</div>\r\n\r\n    <pre if.bind=\"result\"><code>${result}</code></pre>\r\n\r\n    <hr />\r\n\r\n    <button class=\"btn btn-secondary\" click.delegate=\"login()\">Login</button>\r\n    <button class=\"btn btn-secondary\" click.delegate=\"callApi()\">Call API</button>\r\n    <button class=\"btn btn-secondary\" click.delegate=\"logout()\">Logout</button>\r\n\r\n</template>\r\n";});;
 define('login',["exports", "oidc-client", "aurelia-framework", "aurelia-router"], function (_exports, _oidcClient, _aureliaFramework, _aureliaRouter) {
   "use strict";
 
@@ -108,12 +128,12 @@ define('login',["exports", "oidc-client", "aurelia-framework", "aurelia-router"]
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  var Login = (_dec = (0, _aureliaFramework.inject)(_oidcClient.default, _aureliaRouter.Router), _dec(_class =
+  var Login = (_dec = (0, _aureliaFramework.inject)(_aureliaRouter.Router), _dec(_class =
   /*#__PURE__*/
   function () {
-    function Login(oidc, router) {
-      this.oidc = oidc;
+    function Login(router) {
       this.router = router;
+      this.error = '';
       this.doLogin();
     }
 
@@ -122,12 +142,14 @@ define('login',["exports", "oidc-client", "aurelia-framework", "aurelia-router"]
     _proto.doLogin = function doLogin() {
       var _this = this;
 
-      new this.oidc.UserManager({
+      new _oidcClient.default.UserManager({
         response_mode: 'query'
       }).signinRedirectCallback().then(function () {
+        _this.error = '';
+
         _this.router.navigateToRoute('home');
-      }).catch(function (e) {
-        console.error(e);
+      }).catch(function (error) {
+        _this.error = "Error logging user: " + error;
       });
     };
 
@@ -135,13 +157,14 @@ define('login',["exports", "oidc-client", "aurelia-framework", "aurelia-router"]
   }()) || _class);
   _exports.Login = Login;
 });;
-define('text!login.html',[],function(){return "<template>\r\n    Logging in...\r\n</template>";});;
-define('main',["exports", "regenerator-runtime/runtime", "./environment"], function (_exports, _runtime, _environment) {
+define('text!login.html',[],function(){return "<template>\r\n    <div class=\"alert alert-info\" if.bind=\"!error\">\r\n        Logging in...\r\n    </div>\r\n    <div class=\"alert alert-danger\" if.bind=\"error\">\r\n        ${error}\r\n    </div>\r\n</template>\r\n";});;
+define('main',["exports", "regenerator-runtime/runtime", "./environment", "oidc-client", "aurelia-fetch-client"], function (_exports, _runtime, _environment, _oidcClient, _aureliaFetchClient) {
   "use strict";
 
   _exports.__esModule = true;
   _exports.configure = configure;
   _environment = _interopRequireDefault(_environment);
+  _oidcClient = _interopRequireDefault(_oidcClient);
 
   function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -155,6 +178,36 @@ define('main',["exports", "regenerator-runtime/runtime", "./environment"], funct
       aurelia.use.plugin('aurelia-testing');
     }
 
+    var container = aurelia.container; // Register UserManager instance with Aurelia container
+
+    var userManager = new _oidcClient.default.UserManager({
+      authority: 'https://localhost:44396',
+      client_id: 'aurelia',
+      redirect_uri: 'https://localhost:44336/login',
+      response_type: 'code',
+      scope: 'openid profile weather-api',
+      post_logout_redirect_uri: 'https://localhost:44336/'
+    });
+    container.registerInstance(_oidcClient.default.UserManager, userManager); // Register HttpClient instance with Aurelia container
+
+    var httpClient = new _aureliaFetchClient.HttpClient();
+    httpClient.configure(function (config) {
+      config.useStandardConfiguration().withBaseUrl('https://localhost:44373/').withDefaults({
+        credentials: 'same-origin',
+        headers: {
+          'X-Requested-With': 'Fetch'
+        }
+      }).withInterceptor({
+        request: function request(_request) {
+          return userManager.getUser().then(function (user) {
+            _request.headers.append('Authorization', 'Bearer ' + user.access_token);
+
+            return _request;
+          });
+        }
+      });
+    });
+    container.registerInstance(_aureliaFetchClient.HttpClient, httpClient);
     aurelia.start().then(function () {
       return aurelia.setRoot();
     });
