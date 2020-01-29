@@ -83,15 +83,16 @@ namespace Auth
                 // JavaScript Client
                 new Client
                 {
-                    ClientId = "js",
-                    ClientName = "JavaScript Client",
+                    ClientId = "aurelia",
+                    ClientName = "Aurelia Client",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
                     RequireClientSecret = false,
+                    RequireConsent = false,
 
-                    RedirectUris =           { "http://localhost:5003/callback.html" },
-                    PostLogoutRedirectUris = { "http://localhost:5003/index.html" },
-                    AllowedCorsOrigins =     { "http://localhost:5003" },
+                    RedirectUris =           { "https://localhost:44336/login" },
+                    PostLogoutRedirectUris = { "https://localhost:44336/" },
+                    AllowedCorsOrigins =     { "https://localhost:44336" },
 
                     AllowedScopes =
                     {
