@@ -55,7 +55,7 @@ namespace Samples.WeatherApi.MvcClient.Controllers
             // This is using a separate API Client to get access token
             // for accessing Weather API using the Client Credentials
 
-            var content = await _forecastClient.GetStringAsync(WeatherSummaryApiUrl);
+            var content = await _summaryClient.GetStringAsync(WeatherSummaryApiUrl);
 
             ViewBag.WeatherSummaryData = JObject.Parse(content).ToString();
 

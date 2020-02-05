@@ -1,6 +1,5 @@
 using Auth.Data;
 using Auth.Email;
-using IdentityServer4;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
@@ -25,10 +24,9 @@ namespace Auth
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(
-                options =>
-                    options.UseSqlServer(
-                        Configuration.GetConnectionString("DefaultConnection")));
+                options =>  options.UseSqlServer(connectionString));
 
             services
                 .AddDefaultIdentity<AuthUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -43,9 +41,16 @@ namespace Auth
                         options.Events.RaiseInformationEvents = true;
                         options.Events.RaiseSuccessEvents = true;
                     })
-                .AddInMemoryIdentityResources(Config.Ids)
-                .AddInMemoryApiResources(Config.Apis)
-                .AddInMemoryClients(Config.Clients)
+                //.AddInMemoryIdentityResources(Config.Ids)
+                //.AddInMemoryApiResources(Config.Apis)
+                //.AddInMemoryClients(Config.Clients)
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext =
+                        builder => builder.UseSqlServer(
+                            connectionString,
+                            sql => sql.MigrationsAssembly(typeof(Startup).Assembly.GetName().Name));
+                })
                 .AddAspNetIdentity<AuthUser>()
                 .AddDeveloperSigningCredential();
 
@@ -86,6 +91,8 @@ namespace Auth
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            Config.InitializeDatabase(app);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

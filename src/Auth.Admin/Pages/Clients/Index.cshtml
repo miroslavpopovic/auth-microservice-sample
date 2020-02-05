@@ -1,0 +1,44 @@
+﻿@page
+@model Auth.Admin.Pages.Clients.IndexModel
+@{
+    ViewData["Title"] = "Clients";
+}
+
+<div class="row">
+    <div class="col-12">
+        <h2>@ViewData["Title"]</h2>
+    </div>
+
+    <div class="col-12">
+        <a asp-page="/Clients/Edit" class="btn btn-outline-primary mb-3"><span class="fas fa-plus"></span> New Client</a>
+    </div>
+</div>
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Client ID</th>
+                        <th>Client Name</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var client in Model.Clients)
+                {
+                    <tr>
+                        <td>@client.ClientId</td>
+                        <td>@client.ClientName</td>
+                        <td><a class="btn btn-primary" asp-page="/Clients/Edit" asp-route-id="@client.Id">Edit</a></td>
+                        <td>
+                            <a class="btn btn-danger" asp-action="ClientDelete" asp-route-id="@client.Id"><span class="fas fa-trash"></span></a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
