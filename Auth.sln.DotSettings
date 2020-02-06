@@ -1,4 +1,28 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/CodeInspection/JsInspections/LanguageLevel/@EntryValue">Experimental</s:String>
+	<s:String x:Key="/Default/Environment/ManagedLanguageParameterNameHintsOptions/BlackList/@EntryValue">(begin*, end*)
+(start*, end*)
+(first*, last*)
+(first*, second*)
+(from*, to*)
+(min*, max*)
+(key, value)
+(action)
+(func)
+(lambda)
+(callback)
+(value)
+System.Object.Equals
+System.Object.ReferenceEquals
+System.Collections.IEqualityComparer.Equals
+System.Math.*
+System.Text.StringBuilder.*
+System.Linq.Enumerable.*
+System.Linq.Queryable.*
+Newtonsoft.Json.Linq.*
+System.Xml.Linq.*
+System.Threading.Tasks.Task.ConfigureAwait
+System.Threading.Tasks.Task.ConfigureAwait`1
+ForMember</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=weatherforecast/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=weathersummary/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

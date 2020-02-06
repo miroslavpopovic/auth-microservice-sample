@@ -8,6 +8,7 @@
     <div class="col-md-12">
         <h2>@ViewData["Title"]</h2>
 
+        <input type="hidden" asp-for="Id"/>
         <nav>
             <div class="nav nav-tabs mt-3" id="nav-tab" role="tablist">
                 <a class="nav-item nav-link active" id="nav-name-tab" data-toggle="tab" href="#nav-name" role="tab" aria-controls="nav-name" aria-selected="true">Name</a>
@@ -25,27 +26,25 @@
         <div class="tab-content" id="nav-tabContent">
             <div class="tab-pane show active" id="nav-name" role="tabpanel" aria-labelledby="nav-name-tab">
                 <partial name="Partials/Name" model="Model.Client"/>
-                @*@await Html.PartialAsync("Partials/Name", Model.Client)*@
             </div>
 
             @if (Model.Id != 0)
             {
-                @*<div class="tab-pane" id="nav-basics" role="tabpanel" aria-labelledby="nav-basics-tab">
-                    @await Html.PartialAsync("Client/Section/Basics")
+                <div class="tab-pane" id="nav-basics" role="tabpanel" aria-labelledby="nav-basics-tab">
+                    <partial name="Partials/Basics" model="Model"/>
                 </div>
-
                 <div class="tab-pane" id="nav-authentication" role="tabpanel" aria-labelledby="nav-authentication-tab">
-                    @await Html.PartialAsync("Client/Section/Authentication")
+                    <partial name="Partials/Authentication" model="Model"/>
                 </div>
                 <div class="tab-pane" id="nav-token" role="tabpanel" aria-labelledby="nav-token-tab">
-                    @await Html.PartialAsync("Client/Section/Token")
+                    <partial name="Partials/Token" model="Model"/>
                 </div>
                 <div class="tab-pane" id="nav-consent" role="tabpanel" aria-labelledby="nav-consent-tab">
-                    @await Html.PartialAsync("Client/Section/Consent")
+                    <partial name="Partials/Consent" model="Model.Client"/>
                 </div>
                 <div class="tab-pane" id="nav-deviceflow" role="tabpanel" aria-labelledby="nav-deviceflow-tab">
-                    @await Html.PartialAsync("Client/Section/DeviceFlow")
-                </div>*@
+                    <partial name="Partials/DeviceFlow" model="Model.Client"/>
+                </div>
             }
         </div>
     </div>

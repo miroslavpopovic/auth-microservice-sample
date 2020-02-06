@@ -10,10 +10,6 @@ namespace Auth.Admin.Models
         public ClientModel()
         {
             AllowedScopes = new List<string>();
-            PostLogoutRedirectUris = new List<string>();
-            RedirectUris = new List<string>();
-            IdentityProviderRestrictions = new List<string>();
-            AllowedCorsOrigins = new List<string>();
             AllowedGrantTypes = new List<string>();
             Claims = new List<ClientClaimModel>();
             ClientSecrets = new List<ClientSecretModel>();
@@ -28,7 +24,6 @@ namespace Auth.Admin.Models
         public int? ConsentLifetime { get; set; }
 
         public int AccessTokenType { get; set; }
-        public List<SelectListItem> AccessTokenTypes { get; set; }
 
         public bool AllowAccessTokensViaBrowser { get; set; }
         public bool AllowOfflineAccess { get; set; }
@@ -66,13 +61,10 @@ namespace Auth.Admin.Models
 
         public string ProtocolType { get; set; } = "oidc";
 
-        public List<SelectListItem> ProtocolTypes { get; set; }
 
         public int RefreshTokenExpiration { get; set; } = 1;
-        public List<SelectListItem> RefreshTokenExpirations { get; set; }
 
         public int RefreshTokenUsage { get; set; } = 1;
-        public List<SelectListItem> RefreshTokenUsages { get; set; }
 
         public int SlidingRefreshTokenLifetime { get; set; } = 1296000;
 
@@ -81,23 +73,17 @@ namespace Auth.Admin.Models
         public bool RequirePkce { get; set; }
         public bool UpdateAccessTokenClaimsOnRefresh { get; set; }
 
-        public List<string> PostLogoutRedirectUris { get; set; }
-        public string PostLogoutRedirectUrisItems { get; set; }
+        public string PostLogoutRedirectUris { get; set; }
 
-        public List<string> IdentityProviderRestrictions { get; set; }
-        public string IdentityProviderRestrictionsItems { get; set; }
+        public string IdentityProviderRestrictions { get; set; }
 
-        public List<string> RedirectUris { get; set; }
-        public string RedirectUrisItems { get; set; }
+        public string RedirectUris { get; set; }
 
-        public List<string> AllowedCorsOrigins { get; set; }
-        public string AllowedCorsOriginsItems { get; set; }
+        public string AllowedCorsOrigins { get; set; }
 
         public List<string> AllowedGrantTypes { get; set; }
-        public string AllowedGrantTypesItems { get; set; }
 
         public List<string> AllowedScopes { get; set; }
-        public string AllowedScopesItems { get; set; }
 
         public List<ClientClaimModel> Claims { get; set; }
         public List<ClientSecretModel> ClientSecrets { get; set; }
