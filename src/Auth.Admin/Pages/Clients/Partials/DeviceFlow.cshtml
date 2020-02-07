@@ -1,25 +1,25 @@
-﻿@model ClientModel
+﻿@model EditModel
 
 <div class="card mt-3">
     <h5 class="card-header">Device Flow</h5>
     <div class="card-body">
         <!--Input - text -->
         <div class="form-group row">
-            <label asp-for="UserCodeType" class="col-sm-3 col-form-label">
+            <label asp-for="Client.UserCodeType" class="col-sm-3 col-form-label">
                 User Code Type
             </label>
             <div class="col-sm-9">
-                <input type="text" class="form-control" asp-for="UserCodeType">
+                <input type="text" class="form-control" asp-for="Client.UserCodeType">
             </div>
         </div>
 
         <!--Input - number -->
         <div class="form-group row">
-            <label asp-for="DeviceCodeLifetime" class="col-sm-3 col-form-label">
+            <label asp-for="Client.DeviceCodeLifetime" class="col-sm-3 col-form-label">
                 Device Code Lifetime
             </label>
             <div class="col-sm-9">
-                <input type="number" class="form-control" asp-for="DeviceCodeLifetime">
+                <input type="number" class="form-control" asp-for="Client.DeviceCodeLifetime">
             </div>
         </div>
     </div>

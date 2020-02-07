@@ -19,9 +19,14 @@ namespace Auth.Admin.Mappers
             return Mapper.Map<ClientModel>(client);
         }
 
-        public static Client ToEntity(this ClientModel client)
+        public static Client ToEntity(this ClientModel model)
         {
-            return Mapper.Map<Client>(client);
+            return Mapper.Map<Client>(model);
+        }
+
+        public static Client ToEntity(this ClientModel model, Client client)
+        {
+            return Mapper.Map(model, client);
         }
     }
 }

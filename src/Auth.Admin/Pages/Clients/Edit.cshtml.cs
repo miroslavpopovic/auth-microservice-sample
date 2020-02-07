@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Auth.Admin.Extensions;
@@ -11,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Client = IdentityServer4.EntityFramework.Entities.Client;
 
 namespace Auth.Admin.Pages.Clients
 {
@@ -19,6 +19,8 @@ namespace Auth.Admin.Pages.Clients
         private readonly ConfigurationDbContext _dbContext;
 
         public int? Id { get; set; }
+
+        [BindProperty]
         public ClientModel Client { get; set; }
         public IEnumerable<SelectListItem> AccessTokenTypes { get; set; }
         public IEnumerable<string> GrantTypes { get; set; }
@@ -42,30 +44,45 @@ namespace Auth.Admin.Pages.Clients
             }
             else
             {
-                var client = await _dbContext.Clients
-                    .Include(x => x.AllowedGrantTypes)
-                    .Include(x => x.AllowedScopes)
-                    .Include(x => x.IdentityProviderRestrictions)
-                    .Include(x => x.PostLogoutRedirectUris)
-                    .Include(x => x.RedirectUris)
-                    .SingleOrDefaultAsync(x => x.Id == id.Value);
+                var client = await LoadClient(id);
 
                 if (client == null)
                 {
                     return NotFound();
                 }
 
-                AccessTokenTypes = EnumExtensions.ToSelectList<AccessTokenType>();
-                ProtocolTypes = GetProtocolTypes();
-                RefreshTokenExpirations = EnumExtensions.ToSelectList<TokenExpiration>();
-                RefreshTokenUsages = EnumExtensions.ToSelectList<TokenUsage>();
-                Scopes = await GetScopes();
-                GrantTypes = GetGrantTypes();
+                await LoadLookups();
 
                 Client = client.ToModel();
             }
 
             return Page();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (!ModelState.IsValid)
+            {
+                await LoadLookups();
+                return Page();
+            }
+
+            Client client;
+
+            if (Client.Id == 0)
+            {
+                client = Client.ToEntity();
+                await _dbContext.Clients.AddAsync(client);
+            }
+            else
+            {
+                client = await LoadClient(Client.Id);
+                Client.ToEntity(client);
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToPage("/Clients/Index");
         }
 
         private static IEnumerable<string> GetGrantTypes()
@@ -92,6 +109,27 @@ namespace Auth.Admin.Pages.Clients
             var identityScopes = await _dbContext.IdentityResources.Select(x => x.Name).ToListAsync();
 
             return identityScopes.Concat(apiScopes);
+        }
+
+        private async Task<Client> LoadClient(int? id)
+        {
+            return await _dbContext.Clients
+                .Include(x => x.AllowedGrantTypes)
+                .Include(x => x.AllowedScopes)
+                .Include(x => x.IdentityProviderRestrictions)
+                .Include(x => x.PostLogoutRedirectUris)
+                .Include(x => x.RedirectUris)
+                .SingleOrDefaultAsync(x => x.Id == id.Value);
+        }
+
+        private async Task LoadLookups()
+        {
+            AccessTokenTypes = EnumExtensions.ToSelectList<AccessTokenType>();
+            ProtocolTypes = GetProtocolTypes();
+            RefreshTokenExpirations = EnumExtensions.ToSelectList<TokenExpiration>();
+            RefreshTokenUsages = EnumExtensions.ToSelectList<TokenUsage>();
+            Scopes = await GetScopes();
+            GrantTypes = GetGrantTypes();
         }
     }
 }
