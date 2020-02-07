@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Auth.Admin.Extensions;
 using Auth.Admin.Models;
 using AutoMapper;
 using IdentityServer4.EntityFramework.Entities;
@@ -13,10 +14,23 @@ namespace Auth.Admin.Mappers
         {
             CreateMap<Client, ClientModel>(MemberList.Destination)
                 .ForMember(dest => dest.ProtocolType, opt => opt.Condition(srs => srs != null))
-                .ReverseMap();
+                .ReverseMap()
+                .ForMember(
+                    x => x.RedirectUris,
+                    o => o.MapFrom(x => x.RedirectUris.ToList<ClientRedirectUri>(item => item.RedirectUri)))
+                .ForMember(
+                    x => x.PostLogoutRedirectUris,
+                    o => o.MapFrom(
+                        x => x.PostLogoutRedirectUris.ToList<ClientPostLogoutRedirectUri>(
+                            item => item.PostLogoutRedirectUri)))
+                .ForMember(
+                    x => x.IdentityProviderRestrictions,
+                    o => o.MapFrom(
+                        x => x.IdentityProviderRestrictions.ToList<ClientIdPRestriction>(item => item.Provider)))
+                .ForMember(
+                    x => x.AllowedCorsOrigins,
+                    o => o.MapFrom(x => x.AllowedCorsOrigins.ToList<ClientCorsOrigin>(item => item.Origin)));
 
-            //CreateMap<SelectItem, SelectItemDto>(MemberList.Destination)
-            //    .ReverseMap();
 
             CreateMap<ClientGrantType, string>()
                 .ConstructUsing(src => src.GrantType)
@@ -24,42 +38,20 @@ namespace Auth.Admin.Mappers
                 .ForMember(dest => dest.GrantType, opt => opt.MapFrom(src => src));
 
             CreateMap<List<ClientRedirectUri>, string>()
-                .ConstructUsing(src => string.Join('\n', src.Select(u => u.RedirectUri)))
-                .ReverseMap()
-                .ConstructUsing(src =>
-                    src.Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => new ClientRedirectUri {RedirectUri = x}).ToList());
+                .ConstructUsing(src => string.Join(Environment.NewLine, src.Select(u => u.RedirectUri)))
+                .ReverseMap();
 
             CreateMap<List<ClientPostLogoutRedirectUri>, string>()
-                .ConstructUsing(src => string.Join('\n', src.Select(u => u.PostLogoutRedirectUri)))
-                .ReverseMap()
-                .ConstructUsing(src =>
-                    src.Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => new ClientPostLogoutRedirectUri {PostLogoutRedirectUri = x}).ToList());
+                .ConstructUsing(src => string.Join(Environment.NewLine, src.Select(u => u.PostLogoutRedirectUri)))
+                .ReverseMap();
 
             CreateMap<List<ClientIdPRestriction>, string>()
-                .ConstructUsing(src => string.Join('\n', src.Select(u => u.Provider)))
-                .ReverseMap()
-                .ConstructUsing(src =>
-                    src.Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => new ClientIdPRestriction {Provider = x}).ToList());
+                .ConstructUsing(src => string.Join(Environment.NewLine, src.Select(u => u.Provider)))
+                .ReverseMap();
 
             CreateMap<List<ClientCorsOrigin>, string>()
-                .ConstructUsing(src => string.Join('\n', src.Select(u => u.Origin)))
-                .ReverseMap()
-                .ConstructUsing(src =>
-                    src.Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(x => new ClientCorsOrigin {Origin = x}).ToList());
-
-            //CreateMap<ClientRedirectUri, string>()
-            //    .ConstructUsing(src => src.RedirectUri)
-            //    .ReverseMap()
-            //    .ForMember(dest => dest.RedirectUri, opt => opt.MapFrom(src => src));
-
-            //CreateMap<ClientPostLogoutRedirectUri, string>()
-            //    .ConstructUsing(src => src.PostLogoutRedirectUri)
-            //    .ReverseMap()
-            //    .ForMember(dest => dest.PostLogoutRedirectUri, opt => opt.MapFrom(src => src));
+                .ConstructUsing(src => string.Join(Environment.NewLine, src.Select(u => u.Origin)))
+                .ReverseMap();
 
             CreateMap<ClientScope, string>()
                 .ConstructUsing(src => src.Scope)

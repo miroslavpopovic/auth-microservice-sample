@@ -102,7 +102,7 @@
                 @foreach (var scope in Model.Scopes)
                 {
                     <div class="form-check form-check-inline">
-                        <input type="checkbox" id="scope-@scope" name="Client_AllowedScopes" checked="@Model.Client.AllowedScopes.Contains(scope)"/>
+                        <input type="checkbox" id="scope-@scope" name="Client.AllowedScopes" checked="@Model.Client.AllowedScopes.Contains(scope)" value="@scope"/>
                         <label for="scope-@scope">@scope</label>
                     </div>
                 }
@@ -128,7 +128,7 @@
                 @foreach (var grantType in Model.GrantTypes)
                 {
                     <div class="form-check form-check-inline">
-                        <input type="checkbox" id="grantType-@grantType" name="Client_AllowedScopes" checked="@Model.Client.AllowedGrantTypes.Contains(grantType)" />
+                        <input type="checkbox" id="grantType-@grantType" name="Client.AllowedGrantTypes" checked="@Model.Client.AllowedGrantTypes.Contains(grantType)" value="@grantType" />
                         <label for="grantType-@grantType">@grantType</label>
                     </div>
                 }
