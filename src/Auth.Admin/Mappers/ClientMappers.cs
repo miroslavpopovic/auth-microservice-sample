@@ -14,19 +14,34 @@ namespace Auth.Admin.Mappers
 
         internal static IMapper Mapper { get; }
 
-        public static ClientModel ToModel(this Client client)
-        {
-            return Mapper.Map<ClientModel>(client);
-        }
-
         public static Client ToEntity(this ClientModel model)
         {
             return Mapper.Map<Client>(model);
         }
 
-        public static Client ToEntity(this ClientModel model, Client client)
+        public static void ToEntity(this ClientModel model, Client client)
         {
-            return Mapper.Map(model, client);
+            Mapper.Map(model, client);
+        }
+
+        public static ClientSecret ToEntity(this ClientSecretModel model)
+        {
+            return Mapper.Map<ClientSecret>(model);
+        }
+
+        public static void ToEntity(this ClientSecretModel model, ClientSecret clientSecret)
+        {
+            Mapper.Map(model, clientSecret);
+        }
+
+        public static ClientModel ToModel(this Client client)
+        {
+            return Mapper.Map<ClientModel>(client);
+        }
+
+        public static ClientSecretModel ToModel(this ClientSecret clientSecret)
+        {
+            return Mapper.Map<ClientSecretModel>(clientSecret);
         }
     }
 }

@@ -31,9 +31,11 @@
                     <tr>
                         <td>@client.ClientId</td>
                         <td>@client.ClientName</td>
-                        <td><a class="btn btn-primary" asp-page="/Clients/Edit" asp-route-id="@client.Id">Edit</a></td>
                         <td>
-                            <a class="btn btn-danger" asp-action="ClientDelete" asp-route-id="@client.Id"><span class="fas fa-trash"></span></a>
+                            <a class="btn btn-primary" asp-page="/Clients/Edit" asp-route-id="@client.Id"><i class="fas fa-edit"></i></a>
+                        </td>
+                        <td>
+                            <a class="btn btn-danger" asp-page="/Clients/Delete" asp-route-id="@client.Id"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                 }

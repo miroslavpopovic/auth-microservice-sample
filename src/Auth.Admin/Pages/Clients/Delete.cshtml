@@ -1,0 +1,47 @@
+﻿@page "{id:int?}"
+@model Auth.Admin.Pages.Clients.DeleteModel
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<form id="client-form" asp-page="/Clients/Delete" Method="post">
+
+    <!--Hidden -->
+    <input type="hidden" asp-for="Id" />
+
+    <h2>@ViewData["Title"]</h2>
+
+    <div class="card mt-3">
+        <h5 class="card-header">@ViewData["Title"]</h5>
+        <div class="card-body">
+            <!--Input - text -->
+            <div class="form-group row">
+                <label asp-for="ClientId" class="col-sm-3 col-form-label">
+                    Client ID
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="ClientId" disabled="disabled" />
+                </div>
+            </div>
+
+            <!--Input - text -->
+            <div class="form-group row">
+                <label asp-for="ClientName" class="col-sm-3 col-form-label">
+                    Client Name
+                </label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" disabled="disabled" asp-for="ClientName" />
+                </div>
+            </div>
+
+            <!--Button-->
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">
+                </label>
+                <div class="col-sm-9">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
