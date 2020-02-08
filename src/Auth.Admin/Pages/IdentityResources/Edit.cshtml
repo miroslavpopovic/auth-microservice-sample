@@ -1,0 +1,129 @@
+﻿@page "{id:int?}"
+@model Auth.Admin.Pages.IdentityResources.EditModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<form asp-page="/IdentityResources/Edit" method="post" id="identity-resource-form">
+    <input type="hidden" asp-for="@Model.IdentityResource.Id" />
+
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-page="/IdentityResources/Index">Identity resources</a></li>
+                    @if (Model.Id.HasValue)
+                    {
+                        <li class="breadcrumb-item active" aria-current="page">Edit @(string.IsNullOrWhiteSpace(Model.IdentityResource.DisplayName) ? Model.IdentityResource.Name : Model.IdentityResource.DisplayName)</li>
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item active" aria-current="page">Add new Identity resource</li>
+                    }
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="card mt-3">
+        <h5 class="card-header">Edit Identity Resource</h5>
+        <div class="card-body">
+
+            <div class="form-group row">
+                <label asp-for="IdentityResource.Name" class="col-sm-3 col-form-label">Name</label>
+                <div class="col-sm-9">
+                    <input type="text" required class="form-control" asp-for="IdentityResource.Name">
+                    <span asp-validation-for="IdentityResource.Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="IdentityResource.DisplayName" class="col-sm-3 col-form-label">Display Name</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="IdentityResource.DisplayName">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="IdentityResource.Description" class="col-sm-3 col-form-label">Description</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="IdentityResource.Description">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="IdentityResource.Enabled" class="col-sm-3 col-form-label">Enabled</label>
+                <div class="col-sm-9">
+                    <toggle-button>
+                        <input asp-for="IdentityResource.Enabled" type="checkbox">
+                    </toggle-button>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="IdentityResource.ShowInDiscoveryDocument" class="col-sm-3 col-form-label">Show In Discovery Document</label>
+                <div class="col-sm-9">
+                    <toggle-button>
+                        <input asp-for="IdentityResource.ShowInDiscoveryDocument" type="checkbox">
+                    </toggle-button>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="IdentityResource.Required" class="col-sm-3 col-form-label">Required</label>
+                <div class="col-sm-9">
+                    <toggle-button>
+                        <input asp-for="IdentityResource.Required" type="checkbox">
+                    </toggle-button>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="IdentityResource.Emphasize" class="col-sm-3 col-form-label">Emphasize</label>
+                <div class="col-sm-9">
+                    <toggle-button>
+                        <input asp-for="IdentityResource.Emphasize" type="checkbox">
+                    </toggle-button>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="IdentityResource.UserClaims" class="col-sm-3 col-form-label">User Claims</label>
+                <div class="col-sm-9">
+                    @foreach (var claim in Model.Claims)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" id="claim-@claim" name="IdentityResource.UserClaims" checked="@Model.IdentityResource.UserClaims.Contains(claim)" value="@claim" />
+                            <label for="claim-@claim">@claim</label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            @if (Model.Id.HasValue)
+            {
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Properties</label>
+                    <div class="col-sm-9">
+                        <a asp-page="/IdentityResources/Properties" asp-route-id="@Model.Id" class="btn btn-outline-primary"><i class="fas fa-list-alt"></i> Manage Properties</a>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <button type="submit" id="identity-resource-save-button" class="btn btn-primary"><i class="fas fa-save"></i> Save Identity Resource</button>
+                    @if (Model.Id != 0)
+                    {
+                        <a class="btn btn-danger" asp-page="/IdentityResources/Delete" asp-route-id="@Model.Id"><i class="fas fa-trash"></i> Delete Identity Resource</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

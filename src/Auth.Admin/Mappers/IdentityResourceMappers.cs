@@ -26,9 +26,19 @@ namespace Auth.Admin.Mappers
             return resource == null ? null : Mapper.Map<List<IdentityResourceModel>>(resource);
         }
 
+        public static IdentityResourcePropertyModel ToModel(this IdentityResourceProperty resource)
+        {
+            return Mapper.Map<IdentityResourcePropertyModel>(resource);
+        }
+
         public static IdentityResource ToEntity(this IdentityResourceModel resource)
         {
             return resource == null ? null : Mapper.Map<IdentityResource>(resource);
+        }
+
+        public static void ToEntity(this IdentityResourceModel model, IdentityResource identityResource)
+        {
+            Mapper.Map(model, identityResource);
         }
 
         public static List<IdentityResource> ToEntity(this List<IdentityResourceModel> resource)

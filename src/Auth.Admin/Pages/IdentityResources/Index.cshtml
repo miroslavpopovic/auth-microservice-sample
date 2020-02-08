@@ -1,0 +1,48 @@
+﻿@page
+@model Auth.Admin.Pages.IdentityResources.IndexModel
+@{
+    ViewData["Title"] = "Identity Resources";
+}
+
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Identity resources</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-12">
+        <a asp-page="/IdentityResources/Edit" class="btn btn-outline-primary mb-3"><span class="fas fa-plus"></span> New Identity Resource</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var resource in Model.IdentityResources)
+                {
+                    <tr>
+                        <td>@resource.Name</td>
+                        <td class="text-right">
+                            <a class="btn btn-outline-primary" asp-page="/IdentityResources/Properties" asp-route-id="@resource.Id" title="Properties"><i class="fas fa-list-alt"></i></a>
+                            <a class="btn btn-primary" asp-page="/IdentityResources/Edit" asp-route-id="@resource.Id"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" asp-page="/IdentityResources/Delete" asp-route-id="@resource.Id"><span class="fas fa-trash"></span></a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

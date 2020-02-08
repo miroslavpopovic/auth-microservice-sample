@@ -8,14 +8,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
-namespace Auth.Admin.Pages.ApiResources
+namespace Auth.Admin.Pages.IdentityResources
 {
     public class IndexModel : PageModel
     {
         private readonly ConfigurationDbContext _dbContext;
 
         [BindProperty]
-        public IEnumerable<ApiResourceModel> ApiResources { get; set; }
+        public IEnumerable<IdentityResourceModel> IdentityResources { get; set; }
 
         public IndexModel(ConfigurationDbContext dbContext)
         {
@@ -24,9 +24,9 @@ namespace Auth.Admin.Pages.ApiResources
 
         public async Task<IActionResult> OnGetAsync()
         {
-            var apiResources = await _dbContext.ApiResources.ToListAsync();
+            var identityResources = await _dbContext.IdentityResources.ToListAsync();
 
-            ApiResources = apiResources.Select(ApiResourceMappers.ToModel);
+            IdentityResources = identityResources.Select(IdentityResourceMappers.ToModel);
 
             return Page();
         }

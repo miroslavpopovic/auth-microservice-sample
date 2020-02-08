@@ -1,18 +1,18 @@
 ﻿@page "{id:int?}"
-@model Auth.Admin.Pages.ApiResources.PropertiesModel
+@model Auth.Admin.Pages.IdentityResources.PropertiesModel
 @{
     ViewData["Title"] = "Properties";
 }
 
-<form asp-page="/ApiResources/Properties" method="post">
+<form asp-page="/IdentityResources/Properties" method="post">
     <div class="row">
 
         <div class="col-12">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
-                    <li class="breadcrumb-item"><a asp-page="/ApiResources/Index">API resources</a></li>
-                    <li class="breadcrumb-item"><a asp-page="/ApiResources/Edit" asp-route-id="@Model.ApiResourceId">@Model.ApiResourceName</a></li>
+                    <li class="breadcrumb-item"><a asp-page="/IdentityResources/Index">Identity resources</a></li>
+                    <li class="breadcrumb-item"><a asp-page="/IdentityResources/Edit" asp-route-id="@Model.IdentityResourceId">@Model.IdentityResourceName</a></li>
                     <li class="breadcrumb-item active" aria-current="page">Properties</li>
                 </ol>
             </nav>
@@ -21,8 +21,8 @@
         <div class="col-md-12">
             <div asp-validation-summary="All" class="text-danger"></div>
 
-            <input type="hidden" asp-for="ApiResourceId" />
-            <input type="hidden" asp-for="ApiResourceName" />
+            <input type="hidden" asp-for="IdentityResourceId" />
+            <input type="hidden" asp-for="IdentityResourceName" />
 
             <div class="card mt-3">
                 <h5 class="card-header">New Property</h5>
@@ -81,7 +81,7 @@
                                 <tr>
                                     <td>@property.Key</td>
                                     <td>@property.Value</td>
-                                    <td><a asp-page="/ApiResources/DeleteProperty" asp-route-id="@property.Id" class="btn btn-danger"><i class="fas fa-trash"></i></a></td>
+                                    <td><a asp-page="/IdentityResources/DeleteProperty" asp-route-id="@property.Id" class="btn btn-danger"><i class="fas fa-trash"></i></a></td>
                                 </tr>
                             }
                         </tbody>
