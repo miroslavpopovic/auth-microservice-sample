@@ -34,6 +34,11 @@ namespace Auth.Admin.Mappers
             return Mapper.Map<ClientPropertyModel>(clientProperty);
         }
 
+        public static ClientClaimModel ToModel(this ClientClaim clientClaim)
+        {
+            return Mapper.Map<ClientClaimModel>(clientClaim);
+        }
+
         public static ClientSecretModel ToModel(this ClientSecret clientSecret)
         {
             return Mapper.Map<ClientSecretModel>(clientSecret);

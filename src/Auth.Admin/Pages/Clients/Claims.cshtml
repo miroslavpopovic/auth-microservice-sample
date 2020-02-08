@@ -1,0 +1,109 @@
+﻿@page "{id:int?}"
+@model Auth.Admin.Pages.Clients.ClaimsModel
+@{
+    ViewData["Title"] = "Claims";
+}
+
+<form id="client-claims-form" asp-page="/Clients/Claims" method="post">
+    <div class="row">
+
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-page="/Clients/Index">Clients</a></li>
+                    <li class="breadcrumb-item"><a asp-page="/Clients/Edit" asp-route-id="@Model.ClientId">@Model.ClientName</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Claims</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="col-md-12">
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <input type="hidden" asp-for="ClientId" />
+            <input type="hidden" asp-for="ClientName" />
+
+            <div class="card mt-3">
+                <h5 class="card-header">New Claim</h5>
+                <div class="card-body">
+
+                    <div class="form-group row">
+                        <label asp-for="Type" class="col-sm-3 col-form-label">Type</label>
+                        <div class="col-sm-4">
+                            <select id="predefinedTypes" asp-items="@Model.Types" class="form-control"></select>
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" required class="form-control" asp-for="Type">
+                            <span asp-validation-for="Type" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label asp-for="Value" class="col-sm-3 col-form-label">Value</label>
+                        <div class="col-sm-9">
+                            <input type="text" required class="form-control" asp-for="Value">
+                            <span asp-validation-for="Value" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <button type="submit" id="client-claims-button" class="btn btn-outline-primary"><i class="fas fa-plus"></i> Add Claim</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card mt-3">
+            <h5 class="card-header">Claims</h5>
+            <div class="card-body">
+
+                <div class="row table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Value</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var clientClaim in Model.Claims)
+                            {
+                                <tr>
+                                    <td>@clientClaim.Type</td>
+                                    <td>@clientClaim.Value</td>
+                                    <td><a asp-page="/Clients/DeleteClaim" asp-route-id="@clientClaim.Id" class="btn btn-danger"><i class="fas fa-trash"></i></a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        document.getElementById('predefinedTypes').addEventListener('change', function () {
+            var value = this.value;
+
+            var type = document.getElementById('Type');
+            type.value = value;
+
+            if (!value) {
+                type.focus();
+            }
+        });
+    </script>
+}
