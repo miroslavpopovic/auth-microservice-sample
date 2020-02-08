@@ -8,13 +8,28 @@
     <input type="hidden" asp-for="@Model.Client.Id" />
 
     <div class="row">
-        <div class="col-md-12">
-            <h2>@ViewData["Title"]</h2>
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-page="/Clients/Index">Clients</a></li>
+                    @if ((Model.Id.HasValue))
+                    {
+                        <li class="breadcrumb-item active" aria-current="page">Edit @(string.IsNullOrWhiteSpace(Model.Client.ClientName) ? Model.Client.ClientId : Model.Client.ClientName)</li>
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item active" aria-current="page">Add new client</li>
+                    }
+                </ol>
+            </nav>
+        </div>
 
+        <div class="col-md-12">
             <nav>
                 <div class="nav nav-tabs mt-3" id="nav-tab" role="tablist">
                     <a class="nav-item nav-link active" id="nav-name-tab" data-toggle="tab" href="#nav-name" role="tab" aria-controls="nav-name" aria-selected="true">Name</a>
-                    @if (Model.Id != 0)
+                    @if (Model.Id.HasValue)
                     {
                         <a class="nav-item nav-link" id="nav-basics-tab" data-toggle="tab" href="#nav-basics" role="tab" aria-controls="nav-basics" aria-selected="false">Basics</a>
                         <a class="nav-item nav-link" id="nav-authentication-tab" data-toggle="tab" href="#nav-authentication" role="tab" aria-controls="nav-authentication" aria-selected="false">Authentication/Logout</a>
@@ -30,7 +45,7 @@
                     <partial name="Partials/Name" model="Model" />
                 </div>
 
-                @if (Model.Id != 0)
+                @if (Model.Id.HasValue)
                 {
                     <div class="tab-pane" id="nav-basics" role="tabpanel" aria-labelledby="nav-basics-tab">
                         <partial name="Partials/Basics" model="Model" />
@@ -60,11 +75,11 @@
 
     <div class="row">
         <div class="col-md-12">
-            <button class="btn btn-primary">Save</button>
+            <button class="btn btn-primary"><i class="fas fa-save"></i> Save</button>
 
             @if (Model.Id != 0)
             {
-                <a asp-page="/Clients/Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+                <a asp-page="/Clients/Delete" asp-route-id="@Model.Id" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</a>
             }
         </div>
     </div>

@@ -13,6 +13,7 @@ namespace Auth.Admin.Pages.Clients
         {
             _dbContext = dbContext;
         }
+
         public string ClientId { get; set; }
         public string ClientName { get; set; }
 
@@ -47,7 +48,7 @@ namespace Auth.Admin.Pages.Clients
             _dbContext.Clients.Remove(client);
             await _dbContext.SaveChangesAsync();
 
-            return RedirectToPage("/Clients");
+            return RedirectToPage("/Clients/Index");
         }
     }
 }

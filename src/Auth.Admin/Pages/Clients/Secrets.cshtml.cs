@@ -25,8 +25,10 @@ namespace Auth.Admin.Pages.Clients
             _dbContext = dbContext;
         }
 
-        public string ClientId { get; set; }
+        [BindProperty]
+        public int ClientId { get; set; }
 
+        [BindProperty]
         public string ClientName { get; set; }
 
         public List<ClientSecretModel> ClientSecrets { get; set; }
@@ -42,8 +44,6 @@ namespace Auth.Admin.Pages.Clients
 
         public IEnumerable<SelectListItem> HashTypes { get; set; }
 
-        [BindProperty]
-        public int Id { get; set; }
 
         [BindProperty]
         public string Type { get; set; } = "SharedSecret";
@@ -55,17 +55,15 @@ namespace Auth.Admin.Pages.Clients
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Id = id;
-
-            var client = await LoadClient(Id);
+            var client = await LoadClient(id);
 
             if (client == null)
             {
                 return NotFound();
             }
 
-            ClientId = client.ClientId;
-            ClientName = client.ClientName;
+            ClientId = id;
+            ClientName = string.IsNullOrWhiteSpace(client.ClientName) ? client.ClientId : client.ClientName;
 
             LoadLookups(client);
 
@@ -74,7 +72,7 @@ namespace Auth.Admin.Pages.Clients
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var client = await LoadClient(Id);
+            var client = await LoadClient(ClientId);
 
             if (client == null)
             {
@@ -87,18 +85,15 @@ namespace Auth.Admin.Pages.Clients
                 return Page();
             }
 
-            ClientId = client.ClientId;
-            ClientName = client.ClientName;
-
-            var clientSecret = new ClientSecret
-            {
-                Created = DateTime.UtcNow,
-                Description = Description,
-                Expiration = Expiration,
-                Type = Type,
-                Value = HashClientSharedSecret(Type, Value)
-            };
-            client.ClientSecrets.Add(clientSecret);
+            client.ClientSecrets.Add(
+                new ClientSecret
+                {
+                    Created = DateTime.UtcNow,
+                    Description = Description,
+                    Expiration = Expiration,
+                    Type = Type,
+                    Value = HashClientSharedSecret(Type, Value)
+                });
 
             await _dbContext.SaveChangesAsync();
 

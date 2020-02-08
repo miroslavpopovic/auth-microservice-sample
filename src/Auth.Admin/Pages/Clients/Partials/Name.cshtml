@@ -26,7 +26,7 @@
             </div>
         </div>
 
-        @if (Model.Id == 0)
+        @if (!Model.Id.HasValue)
         {
             <div class="card-deck mb-3 text-center">
                 <div class="card mt-4 mb-4 box-shadow">

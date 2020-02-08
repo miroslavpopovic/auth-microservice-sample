@@ -58,6 +58,9 @@ namespace Auth.Admin.Mappers
                 .ReverseMap()
                 .ForMember(dest => dest.Scope, opt => opt.MapFrom(src => src));
 
+            CreateMap<ClientProperty, ClientPropertyModel>(MemberList.Destination)
+                .ReverseMap();
+
             CreateMap<ClientSecret, ClientSecretModel>(MemberList.Destination)
                 .ForMember(dest => dest.Type, opt => opt.Condition(srs => srs != null))
                 .ReverseMap();

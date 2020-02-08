@@ -22,6 +22,7 @@ namespace Auth.Admin.Pages.Clients
 
         [BindProperty]
         public ClientModel Client { get; set; }
+
         public IEnumerable<SelectListItem> AccessTokenTypes { get; set; }
         public IEnumerable<string> GrantTypes { get; set; }
         public IEnumerable<SelectListItem> ProtocolTypes { get; set; }
@@ -51,10 +52,10 @@ namespace Auth.Admin.Pages.Clients
                     return NotFound();
                 }
 
-                await LoadLookups();
-
                 Client = client.ToModel();
             }
+
+            await LoadLookups();
 
             return Page();
         }
@@ -68,8 +69,9 @@ namespace Auth.Admin.Pages.Clients
             }
 
             Client client;
+            var isNew = Client.Id == 0;
 
-            if (Client.Id == 0)
+            if (isNew)
             {
                 client = Client.ToEntity();
                 await _dbContext.Clients.AddAsync(client);
@@ -82,7 +84,9 @@ namespace Auth.Admin.Pages.Clients
 
             await _dbContext.SaveChangesAsync();
 
-            return RedirectToPage("/Clients/Index");
+            return isNew
+                ? RedirectToPage("/Clients/Edit", new {id = client.Id})
+                : RedirectToPage("/Clients/Index");
         }
 
         private static IEnumerable<string> GetGrantTypes()

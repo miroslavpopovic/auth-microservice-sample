@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Auth.Admin.Pages.Clients
 {
-    public class DeleteSecretModel : PageModel
+    public class DeletePropertyModel : PageModel
     {
         private readonly ConfigurationDbContext _dbContext;
 
-        public DeleteSecretModel(ConfigurationDbContext dbContext)
+        public DeletePropertyModel(ConfigurationDbContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -18,30 +18,27 @@ namespace Auth.Admin.Pages.Clients
         public int ClientId { get; set; }
         public string ClientName { get; set; }
 
-        public string Description { get; set; }
-
         [BindProperty]
         public int Id { get; set; }
 
-        public string Type { get; set; }
+        public string Key { get; set; }
 
         public string Value { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var clientSecret = await _dbContext.FindAsync<ClientSecret>(id);
+            var clientProperty = await _dbContext.FindAsync<ClientProperty>(id);
 
-            if (clientSecret == null)
+            if (clientProperty == null)
             {
                 return NotFound();
             }
 
             Id = id;
-            Description = clientSecret.Description;
-            Type = clientSecret.Type;
-            Value = clientSecret.Value;
+            Key = clientProperty.Key;
+            Value = clientProperty.Value;
 
-            var client = await _dbContext.Clients.FindAsync(clientSecret.ClientId);
+            var client = await _dbContext.Clients.FindAsync(clientProperty.ClientId);
             ClientId = client.Id;
             ClientName = string.IsNullOrWhiteSpace(client.ClientName) ? client.ClientId : client.ClientName;
 
@@ -50,17 +47,17 @@ namespace Auth.Admin.Pages.Clients
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var clientSecret = await _dbContext.FindAsync<ClientSecret>(Id);
+            var clientProperty = await _dbContext.FindAsync<ClientProperty>(Id);
 
-            if (clientSecret == null)
+            if (clientProperty == null)
             {
                 return NotFound();
             }
 
-            _dbContext.Remove(clientSecret);
+            _dbContext.Remove(clientProperty);
             await _dbContext.SaveChangesAsync();
 
-            return RedirectToPage("/Clients/Secrets", new { id = clientSecret.ClientId });
+            return RedirectToPage("/Clients/Properties", new { id = clientProperty.ClientId });
         }
     }
 }

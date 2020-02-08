@@ -6,7 +6,12 @@
 
 <div class="row">
     <div class="col-12">
-        <h2>@ViewData["Title"]</h2>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Clients</li>
+            </ol>
+        </nav>
     </div>
 
     <div class="col-12">
@@ -26,19 +31,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                @foreach (var client in Model.Clients)
-                {
-                    <tr>
-                        <td>@client.ClientId</td>
-                        <td>@client.ClientName</td>
-                        <td>
-                            <a class="btn btn-primary" asp-page="/Clients/Edit" asp-route-id="@client.Id"><i class="fas fa-edit"></i></a>
-                        </td>
-                        <td>
-                            <a class="btn btn-danger" asp-page="/Clients/Delete" asp-route-id="@client.Id"><i class="fas fa-trash"></i></a>
-                        </td>
-                    </tr>
-                }
+                    @foreach (var client in Model.Clients)
+                    {
+                        <tr>
+                            <td>@client.ClientId</td>
+                            <td>@client.ClientName</td>
+                            <td>
+                                <a class="btn btn-primary" asp-page="/Clients/Edit" asp-route-id="@client.Id"><i class="fas fa-edit"></i></a>
+                            </td>
+                            <td>
+                                <a class="btn btn-danger" asp-page="/Clients/Delete" asp-route-id="@client.Id"><i class="fas fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
                 </tbody>
             </table>
         </div>
