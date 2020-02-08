@@ -81,7 +81,6 @@ namespace Auth.Admin.Pages.ApiResources
                 : RedirectToPage("/ApiResources/Index");
         }
 
-
         private async Task<ApiResource> LoadApiResource(int? id)
         {
             return await _dbContext.ApiResources

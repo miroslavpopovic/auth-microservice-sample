@@ -1,0 +1,137 @@
+﻿@page "{id:int?}"
+@model Auth.Admin.Pages.ApiResources.ScopesModel
+@{
+    ViewData["Title"] = "Scopes";
+}
+
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                <li class="breadcrumb-item"><a asp-page="/ApiResources/Index">API resources</a></li>
+                <li class="breadcrumb-item"><a asp-page="/ApiResources/Edit" asp-route-id="@Model.ApiResourceId">@Model.ApiResourceName</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Scopes</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<form asp-page="/ApiResources/Scopes" asp-route-scope="@Model.Scope.Id" id="api-scope-form" method="post">
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <input type="hidden" asp-for="Scope.Id" />
+    <input type="hidden" asp-for="ApiResourceId" />
+
+    <div class="card mt-3">
+        <h5 class="card-header">Edit scope</h5>
+        <div class="card-body">
+            <div class="form-group row">
+                <label asp-for="Scope.Name" class="col-sm-3 col-form-label">Name</label>
+                <div class="col-sm-9">
+                    <input type="text" required class="form-control" asp-for="Scope.Name">
+                    <span asp-validation-for="Scope.Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="Scope.DisplayName" class="col-sm-3 col-form-label">Display Name</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="Scope.DisplayName">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="Scope.Description" class="col-sm-3 col-form-label">Description</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="Scope.Description">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="Scope.Required" class="col-sm-3 col-form-label">Required</label>
+                <div class="col-sm-9">
+                    <toggle-button>
+                        <input asp-for="Scope.Required" type="checkbox">
+                    </toggle-button>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="Scope.Emphasize" class="col-sm-3 col-form-label">Emphasize</label>
+                <div class="col-sm-9">
+                    <toggle-button>
+                        <input asp-for="Scope.Emphasize" type="checkbox">
+                    </toggle-button>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="Scope.UserClaims" class="col-sm-3 col-form-label">User Claims</label>
+                <div class="col-sm-9">
+                    @foreach (var claim in Model.Claims)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" id="claim-@claim" name="Scope.UserClaims" checked="@Model.Scope.UserClaims.Contains(claim)" value="@claim" />
+                            <label for="claim-@claim">@claim</label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <button type="submit" asp-page="/ApiResources/Scopes" id="api-scope-save-button" class="btn btn-primary">
+                        @if (Model.Scope.Id == 0)
+                        {
+                            <span><i class="fas fa-plus"></i> Add Scope</span>
+                        }
+                        else
+                        {
+                            <span><i class="fas fa-save"></i> Save Scope</span>
+                        }
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>
+
+@if (Model.Scope.Id == 0)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mt-3">
+                <h5 class="card-header">Scopes</h5>
+                <div class="card-body">
+                    <div class="row table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @foreach (var scope in Model.Scopes)
+                                {
+                                    <tr>
+                                        <td>@scope.Name</td>
+                                        <td>
+                                            <a asp-page="/ApiResources/Scopes" asp-route-id="@Model.ApiResourceId" asp-route-scope="@scope.Id" class="btn btn-primary"><i class="fas fa-edit"></i> Edit</a>
+                                            <a asp-page="/ApiResources/DeleteScope" asp-route-id="@scope.Id" class="btn btn-danger"><i class="fas fa-trash"></i> Delete</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
