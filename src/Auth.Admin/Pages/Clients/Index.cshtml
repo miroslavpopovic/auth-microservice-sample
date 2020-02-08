@@ -27,7 +27,6 @@
                         <th>Client ID</th>
                         <th>Client Name</th>
                         <th></th>
-                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -36,11 +35,12 @@
                         <tr>
                             <td>@client.ClientId</td>
                             <td>@client.ClientName</td>
-                            <td>
-                                <a class="btn btn-primary" asp-page="/Clients/Edit" asp-route-id="@client.Id"><i class="fas fa-edit"></i></a>
-                            </td>
-                            <td>
-                                <a class="btn btn-danger" asp-page="/Clients/Delete" asp-route-id="@client.Id"><i class="fas fa-trash"></i></a>
+                            <td class="text-right">
+                                <a class="btn btn-outline-primary" asp-page="/Clients/Secrets" asp-route-id="@client.Id" title="Secrets"><i class="fas fa-key"></i></a>
+                                <a class="btn btn-outline-primary" asp-page="/Clients/Properties" asp-route-id="@client.Id" title="Properties"><i class="fas fa-list-alt"></i></a>
+                                <a class="btn btn-outline-primary" asp-page="/Clients/Claims" asp-route-id="@client.Id" title="Claims"><i class="fas fa-info-circle"></i></a>
+                                <a class="btn btn-primary" asp-page="/Clients/Edit" asp-route-id="@client.Id" title="Edit"><i class="fas fa-edit"></i></a>
+                                <a class="btn btn-danger" asp-page="/Clients/Delete" asp-route-id="@client.Id" title="Delete"><i class="fas fa-trash"></i></a>
                             </td>
                         </tr>
                     }
