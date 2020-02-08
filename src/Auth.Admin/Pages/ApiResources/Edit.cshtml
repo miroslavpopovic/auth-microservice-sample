@@ -1,0 +1,116 @@
+﻿@page
+@model Auth.Admin.Pages.ApiResources.EditModel
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<form asp-page="/ApiResources/Edit" method="post" id="api-resource-form">
+    <input type="hidden" asp-for="@Model.ApiResource.Id" />
+
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                    <li class="breadcrumb-item"><a asp-page="/ApiResources/Index">API resources</a></li>
+                    @if (Model.Id.HasValue)
+                    {
+                        <li class="breadcrumb-item active" aria-current="page">Edit @(string.IsNullOrWhiteSpace(Model.ApiResource.DisplayName) ? Model.ApiResource.Name : Model.ApiResource.DisplayName)</li>
+                    }
+                    else
+                    {
+                        <li class="breadcrumb-item active" aria-current="page">Add new API resource</li>
+                    }
+                </ol>
+            </nav>
+        </div>
+    </div>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="card mt-3">
+        <h5 class="card-header">Edit API Resource</h5>
+        <div class="card-body">
+
+            <div class="form-group row">
+                <label asp-for="ApiResource.Name" class="col-sm-3 col-form-label">Name</label>
+                <div class="col-sm-9">
+                    <input type="text" required class="form-control" asp-for="ApiResource.Name">
+                    <span asp-validation-for="ApiResource.Name" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="ApiResource.DisplayName" class="col-sm-3 col-form-label">Display Name</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="ApiResource.DisplayName">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="ApiResource.Description" class="col-sm-3 col-form-label">Description</label>
+                <div class="col-sm-9">
+                    <input type="text" class="form-control" asp-for="ApiResource.Description">
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="ApiResource.Enabled" class="col-sm-3 col-form-label">Enabled</label>
+                <div class="col-sm-9">
+                    <toggle-button>
+                        <input asp-for="ApiResource.Enabled" type="checkbox">
+                    </toggle-button>
+                </div>
+            </div>
+
+            @if (Model.Id.HasValue)
+            {
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Scopes</label>
+                    <div class="col-sm-9">
+                        <a asp-page="/ApiResources/Scopes" asp-route-id="@Model.Id" class="btn btn-outline-primary"><i class="fas fa-star"></i> Manage Scopes</a>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Secrets</label>
+                    <div class="col-sm-9">
+                        <a asp-page="/ApiResources/Secrets" asp-route-id="@Model.Id" class="btn btn-outline-primary"><i class="fas fa-key"></i> Manage Secrets</a>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Properties</label>
+                    <div class="col-sm-9">
+                        <a asp-page="/ApiResources/Properties" asp-route-id="@Model.Id" class="btn btn-outline-primary"><i class="fas fa-list-alt"></i> Manage Properties</a>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group row">
+                <label asp-for="ApiResource.UserClaims" class="col-sm-3 col-form-label">User Claims</label>
+                <div class="col-sm-9">
+                    @foreach (var claim in Model.Claims)
+                    {
+                        <div class="form-check form-check-inline">
+                            <input type="checkbox" id="claim-@claim" name="ApiResource.UserClaims" checked="@Model.ApiResource.UserClaims.Contains(claim)" value="@claim" />
+                            <label for="claim-@claim">@claim</label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <button type="submit" id="api-resource-save-button" class="btn btn-primary"><i class="fas fa-save"></i> Save API Resource</button>
+                    @if (Model.Id != 0)
+                    {
+                        <a class="btn btn-danger" asp-page="/ApiResources/Delete" asp-route-id="@Model.Id"><i class="fas fa-trash"></i> Delete API Resource</a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</form>

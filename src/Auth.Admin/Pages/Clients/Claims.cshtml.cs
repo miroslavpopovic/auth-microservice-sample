@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Auth.Admin.Mappers;
 using Auth.Admin.Models;
+using Auth.Admin.Services;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -81,28 +82,6 @@ namespace Auth.Admin.Pages.Clients
             return RedirectToPage("/Clients/Claims", new { id = client.Id });
         }
 
-        private static List<string> GetClaimTypes()
-        {
-            return new List<string>
-            {
-                "name",
-                "given_name",
-                "family_name",
-                "middle_name",
-                "nickname",
-                "preferred_username",
-                "profile",
-                "picture",
-                "website",
-                "gender",
-                "birthdate",
-                "zoneinfo",
-                "locale",
-                "address",
-                "updated_at"
-            };
-        }
-
         private async Task<Client> LoadClient(int? id)
         {
             return await _dbContext.Clients
@@ -113,7 +92,7 @@ namespace Auth.Admin.Pages.Clients
         private void LoadLookups(Client client)
         {
             Types = new[] {new SelectListItem("<Custom>", string.Empty)}
-                .Union(GetClaimTypes().Select(x => new SelectListItem(x, x)));
+                .Union(PredefinedData.GetClaimTypes().Select(x => new SelectListItem(x, x)));
             Claims = client.Claims.Select(ClientMappers.ToModel).ToList();
         }
     }

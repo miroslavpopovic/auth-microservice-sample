@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Auth.Admin.Extensions;
 using Auth.Admin.Mappers;
 using Auth.Admin.Models;
+using Auth.Admin.Services;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -18,6 +19,11 @@ namespace Auth.Admin.Pages.Clients
     {
         private readonly ConfigurationDbContext _dbContext;
 
+        public EditModel(ConfigurationDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         public int? Id { get; set; }
 
         [BindProperty]
@@ -29,11 +35,6 @@ namespace Auth.Admin.Pages.Clients
         public IEnumerable<SelectListItem> RefreshTokenExpirations { get; set; }
         public IEnumerable<SelectListItem> RefreshTokenUsages { get; set; }
         public IEnumerable<string> Scopes { get; set; }
-
-        public EditModel(ConfigurationDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -89,19 +90,6 @@ namespace Auth.Admin.Pages.Clients
                 : RedirectToPage("/Clients/Index");
         }
 
-        private static IEnumerable<string> GetGrantTypes()
-        {
-            return new List<string>
-            {
-                "implicit",
-                "client_credentials",
-                "authorization_code",
-                "hybrid",
-                "password",
-                "urn:ietf:params:oauth:grant-type:device_code"
-            };
-        }
-
         private static IEnumerable<SelectListItem> GetProtocolTypes()
         {
             return new[] {new SelectListItem("oidc", "OpenID Connect")};
@@ -133,7 +121,7 @@ namespace Auth.Admin.Pages.Clients
             RefreshTokenExpirations = EnumExtensions.ToSelectList<TokenExpiration>();
             RefreshTokenUsages = EnumExtensions.ToSelectList<TokenUsage>();
             Scopes = await GetScopes();
-            GrantTypes = GetGrantTypes();
+            GrantTypes = PredefinedData.GetGrantTypes();
         }
     }
 }

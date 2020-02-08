@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Auth.Admin.Extensions;
 using Auth.Admin.Mappers;
 using Auth.Admin.Models;
+using Auth.Admin.Services;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Entities;
 using IdentityServer4.Models;
@@ -100,19 +101,6 @@ namespace Auth.Admin.Pages.Clients
             return RedirectToPage("/Clients/Secrets", new {id = client.Id});
         }
 
-        private static List<string> GetSecretTypes()
-        {
-            var secretTypes = new List<string>
-            {
-                "SharedSecret",
-                "X509Thumbprint",
-                "X509Name",
-                "X509CertificateBase64"
-            };
-
-            return secretTypes;
-        }
-
         private string HashClientSharedSecret(string type, string value)
         {
             if (type != "SharedSecret") return value;
@@ -140,7 +128,7 @@ namespace Auth.Admin.Pages.Clients
         private void LoadLookups(Client client)
         {
             HashTypes = EnumExtensions.ToSelectList<HashType>();
-            Types = GetSecretTypes().Select(x => new SelectListItem(x, x));
+            Types = PredefinedData.GetSecretTypes().Select(x => new SelectListItem(x, x));
             ClientSecrets = client.ClientSecrets.Select(ClientMappers.ToModel).ToList();
         }
     }

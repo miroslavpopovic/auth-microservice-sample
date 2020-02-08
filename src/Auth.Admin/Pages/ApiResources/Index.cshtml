@@ -1,0 +1,50 @@
+﻿@page
+@model Auth.Admin.Pages.ApiResources.IndexModel
+@{
+    ViewData["Title"] = "API Resources";
+}
+
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+                <li class="breadcrumb-item active" aria-current="page">API Resources</li>
+            </ol>
+        </nav>
+    </div>
+
+    <div class="col-12">
+        <a asp-page="/ApiResources/Edit" class="btn btn-outline-primary mb-3"><span class="fas fa-plus"></span> New API Resource</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var api in Model.ApiResources)
+                {
+                    <tr>
+                        <td>@api.Name</td>
+                        <td class="text-right">
+                            <a class="btn btn-outline-primary" asp-page="/ApiResources/Secrets" asp-route-id="@api.Id" title="Secrets"><i class="fas fa-key"></i></a>
+                            <a class="btn btn-outline-primary" asp-page="/ApiResources/Properties" asp-route-id="@api.Id" title="Properties"><i class="fas fa-list-alt"></i></a>
+                            <a class="btn btn-outline-primary" asp-page="/ApiResources/Scopes" asp-route-id="@api.Id" title="Scopes"><i class="fas fa-star"></i></a>
+                            <a class="btn btn-primary" asp-page="/ApiResources/Edit" asp-route-id="@api.Id"><i class="fas fa-edit"></i></a>
+                            <a class="btn btn-danger" asp-page="/ApiResources/Delete" asp-route-id="@api.Id"><span class="fas fa-trash"></span></a>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -13,7 +13,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
                     <li class="breadcrumb-item"><a asp-page="/Clients/Index">Clients</a></li>
-                    @if ((Model.Id.HasValue))
+                    @if (Model.Id.HasValue)
                     {
                         <li class="breadcrumb-item active" aria-current="page">Edit @(string.IsNullOrWhiteSpace(Model.Client.ClientName) ? Model.Client.ClientId : Model.Client.ClientName)</li>
                     }
@@ -23,6 +23,10 @@
                     }
                 </ol>
             </nav>
+        </div>
+
+        <div class="col-12">
+            <div asp-validation-summary="All" class="text-danger"></div>
         </div>
 
         <div class="col-md-12">
@@ -64,12 +68,6 @@
                     </div>
                 }
             </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
-            <div asp-validation-summary="All" class="text-danger"></div>
         </div>
     </div>
 
