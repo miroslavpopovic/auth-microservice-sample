@@ -4,7 +4,41 @@
     ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1 class="display-4">Dashboard</h1>
+<hr/>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Clients [@Model.ClientCount]
+            </div>
+            <div class="card-body">
+                <a asp-page="/Clients/Index" class="btn btn-outline-primary btn-block"><i class="fas fa-server"></i> Show clients</a>
+                <a asp-page="/Clients/Edit" class="btn btn-outline-primary btn-block"><i class="fas fa-plus"></i> New client</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                API resources [@Model.ApiResourceCount]
+            </div>
+            <div class="card-body">
+                <a asp-page="/ApiResources/Index" class="btn btn-outline-primary btn-block"><i class="fas fa-cog"></i> Show API resources</a>
+                <a asp-page="/ApiResources/Edit" class="btn btn-outline-primary btn-block"><i class="fas fa-plus"></i> New API resource</a>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <div class="card-header">
+                Identity resources [@Model.IdentityResourceCount]
+            </div>
+            <div class="card-body">
+                <a asp-page="/IdentityResources/Index" class="btn btn-outline-primary btn-block"><i class="fas fa-id-badge"></i> Show identity resources</a>
+                <a asp-page="/IdentityResources/Edit" class="btn btn-outline-primary btn-block"><i class="fas fa-plus"></i> New identity resource</a>
+            </div>
+        </div>
+    </div>
 </div>
