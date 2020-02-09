@@ -1,0 +1,92 @@
+﻿@page
+@model Auth.Pages.Consent.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.RedirectUrl))
+{
+    <partial name="Shared/_RedirectPartial" model="@Model.RedirectUrl" />
+}
+else
+{
+    <div class="page-consent">
+        <div class="row page-header">
+            <div class="col-sm-10">
+                @if (Model.Model.ClientLogoUrl != null)
+                {
+                    <div class="client-logo"><img src="@Model.Model.ClientLogoUrl"></div>
+                }
+                <h1>
+                    @Model.Model.ClientName
+                    <small>is requesting your permission</small>
+                </h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-8">
+                <partial name="_ValidationSummary" />
+
+                <form asp-page="/Consent/Index" class="consent-form">
+                    <input type="hidden" asp-for="Model.ReturnUrl" />
+
+                    <div>Uncheck the permissions you do not wish to grant.</div>
+
+                    @if (Model.Model.IdentityScopes.Any())
+                    {
+                        <div class="card consent-buttons">
+                            <div class="card-header">
+                                <span class="fas fa-user"></span> Personal Information
+                            </div>
+                            <ul class="list-group">
+                                @foreach (var scope in Model.Model.IdentityScopes)
+                                {
+                                    <partial name="_ScopeListItem" model="@scope" />
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    @if (Model.Model.ResourceScopes.Any())
+                    {
+                        <div class="card">
+                            <div class="card-header">
+                                <span class="fas fa-tasks"></span> Application Access
+                            </div>
+                            <ul class="list-group">
+                                @foreach (var scope in Model.Model.ResourceScopes)
+                                {
+                                    <partial name="_ScopeListItem" model="scope" />
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    @if (Model.Model.AllowRememberConsent)
+                    {
+                        <div class="consent-remember">
+                            <label>
+                                <input class="consent-scopecheck" asp-for="Model.RememberConsent" />
+                                <strong>Remember My Decision</strong>
+                            </label>
+                        </div>
+                    }
+
+                    <div class="consent-buttons">
+                        <button name="Model.Button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
+                        <button name="Model.Button" value="no" class="btn">No, Do Not Allow</button>
+                        @if (Model.Model.ClientUrl != null)
+                        {
+                            <a class="float-right btn btn-outline-primary" target="_blank" href="@Model.Model.ClientUrl">
+                                <span class="fas fa-info-circle"></span>
+                                <strong>@Model.Model.ClientName</strong>
+                            </a>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
