@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.WeatherSummaryApi",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.WeatherApi.AureliaClient", "src\Samples.WeatherApi.AureliaClient\Samples.WeatherApi.AureliaClient.csproj", "{0A29D071-A8EF-4C5C-B8BB-64BA4AE2E1F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Admin", "src\Auth.Admin\Auth.Admin.csproj", "{BD450A5F-DAA8-40C6-978F-15D92FBB6A08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth.Admin", "src\Auth.Admin\Auth.Admin.csproj", "{BD450A5F-DAA8-40C6-978F-15D92FBB6A08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.WeatherApi.WpfClient", "src\Samples.WeatherApi.WpfClient\Samples.WeatherApi.WpfClient.csproj", "{EFCBB505-2BDF-4E01-A51E-0CAE4F6D5F57}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{BD450A5F-DAA8-40C6-978F-15D92FBB6A08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BD450A5F-DAA8-40C6-978F-15D92FBB6A08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BD450A5F-DAA8-40C6-978F-15D92FBB6A08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFCBB505-2BDF-4E01-A51E-0CAE4F6D5F57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFCBB505-2BDF-4E01-A51E-0CAE4F6D5F57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFCBB505-2BDF-4E01-A51E-0CAE4F6D5F57}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFCBB505-2BDF-4E01-A51E-0CAE4F6D5F57}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

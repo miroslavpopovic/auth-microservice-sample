@@ -12,8 +12,14 @@
             Please enter the code displayed on your device
         </p>
         <form asp-page="/Device/Index" method="post">
-            <input for="UserCode" name="UserCode" class="form-control" />
-            <button class="btn btn-primary">Submit</button>
+            <div class="row">
+                <div class="col">
+                    <input for="UserCode" name="UserCode" class="form-control" />
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary">Submit</button>
+                </div>
+            </div>
         </form>
     </div>
 }
@@ -96,8 +102,8 @@ else
                     }
 
                     <div class="consent-buttons">
-                        <button name="button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
-                        <button name="button" value="no" class="btn">No, Do Not Allow</button>
+                        <button name="Model.Button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
+                        <button name="Model.Button" value="no" class="btn">No, Do Not Allow</button>
                         @if (Model.Model.ClientUrl != null)
                         {
                             <a class="float-right btn btn-outline-primary" target="_blank" href="@Model.Model.ClientUrl">

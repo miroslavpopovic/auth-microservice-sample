@@ -32,7 +32,7 @@ namespace Auth.Pages.Device
         }
 
         [BindProperty]
-        public DeviceAuthorizationViewModel Model { get; set; }
+        public DeviceAuthorizationViewModel Model { get; set; } = new DeviceAuthorizationViewModel();
 
         public async Task<IActionResult> OnGetAsync()
         {

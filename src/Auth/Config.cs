@@ -138,9 +138,12 @@ namespace Auth
                 {
                     ClientId = "wpf-client",
                     ClientName = "WPF Client",
+
                     AllowedGrantTypes = GrantTypes.DeviceFlow,
-                    RequirePkce = true,
-                    RequireConsent = true,
+                    RequireClientSecret = false,
+
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    AllowOfflineAccess = true,
 
                     AllowedScopes =
                     {

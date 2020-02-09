@@ -21,7 +21,7 @@ export function configure(aurelia) {
     // Register UserManager instance with Aurelia container
     let userManager = new Oidc.UserManager({
         authority: 'https://localhost:44396',
-        client_id: 'aurelia',
+        client_id: 'aurelia-client',
         redirect_uri: 'https://localhost:44336/login',
         response_type: 'code',
         scope: 'openid profile weather-api',
