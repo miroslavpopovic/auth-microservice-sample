@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using IdentityServer4.EntityFramework.DbContexts;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +31,13 @@ namespace Auth.Admin.Pages
             IdentityResourceCount = await _dbContext.IdentityResources.CountAsync();
 
             return Page();
+        }
+
+        public IActionResult OnGetLogout()
+        {
+            return SignOut(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                OpenIdConnectDefaults.AuthenticationScheme);
         }
     }
 }

@@ -1,5 +1,8 @@
+using System.IdentityModel.Tokens.Jwt;
 using IdentityServer4.EntityFramework.DbContexts;
 using IdentityServer4.EntityFramework.Storage;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -21,11 +24,43 @@ namespace Auth.Admin
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            JwtSecurityTokenHandler.DefaultMapInboundClaims = false;
+
             services.AddConfigurationDbContext<ConfigurationDbContext>(
                 options => options.ConfigureDbContext = builder =>
                     builder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddRazorPages();
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
+                })
+                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+                {
+                    options.Authority = "https://localhost:44396";
+
+                    options.ClientId = "auth-admin-client";
+                    options.ClientSecret = "secret";
+                    options.ResponseType = "code";
+
+                    options.SaveTokens = true;
+
+                    options.Scope.Add("offline_access");
+                });
+
+            services
+                .AddRazorPages()
+                .AddRazorPagesOptions(
+                    options =>
+                    {
+                        options.Conventions
+                            .AuthorizePage("/Index")
+                            .AuthorizeFolder("/ApiResources")
+                            .AuthorizeFolder("/Clients")
+                            .AuthorizeFolder("/IdentityResources");
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,11 +82,14 @@ namespace Auth.Admin
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints
+                    .MapRazorPages()
+                    .RequireAuthorization();
             });
         }
     }

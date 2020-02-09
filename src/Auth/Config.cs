@@ -86,6 +86,31 @@ namespace Auth
                     AllowOfflineAccess = true
                 },
 
+                // Auth.Admin client
+                new Client
+                {
+                    ClientId = "auth-admin-client",
+                    ClientSecrets = {new Secret("secret".Sha256())},
+
+                    AllowedGrantTypes = GrantTypes.Code,
+                    RequireConsent = false,
+                    RequirePkce = true,
+
+                    // where to redirect to after login
+                    RedirectUris = { "https://localhost:44344/signin-oidc" },
+
+                    // where to redirect to after logout
+                    PostLogoutRedirectUris = { "https://localhost:44344/signout-callback-oidc" },
+
+                    AllowedScopes = new List<string>
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile
+                    },
+
+                    AllowOfflineAccess = true
+                },
+
                 // JavaScript Client
                 new Client
                 {
