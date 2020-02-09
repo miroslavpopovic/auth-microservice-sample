@@ -11,5 +11,7 @@
 
         public bool HasValidationError => ValidationError != null;
         public string ValidationError { get; set; }
+
+        public bool RedisplayConsentUI { get; set; }
     }
 }

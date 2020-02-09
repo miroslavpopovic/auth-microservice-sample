@@ -66,14 +66,14 @@ namespace Auth
                     ClientSecrets = {new Secret("secret".Sha256())},
 
                     AllowedGrantTypes = GrantTypes.Code,
-                    RequireConsent = false,
+                    RequireConsent = true,
                     RequirePkce = true,
 
                     // where to redirect to after login
-                    RedirectUris = { "https://localhost:44316/signin-oidc" },
+                    RedirectUris = {"https://localhost:44316/signin-oidc"},
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "https://localhost:44316/signout-callback-oidc" },
+                    PostLogoutRedirectUris = {"https://localhost:44316/signout-callback-oidc"},
 
                     AllowedScopes = new List<string>
                     {
@@ -93,14 +93,14 @@ namespace Auth
                     ClientSecrets = {new Secret("secret".Sha256())},
 
                     AllowedGrantTypes = GrantTypes.Code,
-                    RequireConsent = false,
+                    RequireConsent = true,
                     RequirePkce = true,
 
                     // where to redirect to after login
-                    RedirectUris = { "https://localhost:44344/signin-oidc" },
+                    RedirectUris = {"https://localhost:44344/signin-oidc"},
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = { "https://localhost:44344/signout-callback-oidc" },
+                    PostLogoutRedirectUris = {"https://localhost:44344/signout-callback-oidc"},
 
                     AllowedScopes = new List<string>
                     {
@@ -119,11 +119,28 @@ namespace Auth
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
                     RequireClientSecret = false,
-                    RequireConsent = false,
+                    RequireConsent = true,
 
-                    RedirectUris =           { "https://localhost:44336/login" },
-                    PostLogoutRedirectUris = { "https://localhost:44336/" },
-                    AllowedCorsOrigins =     { "https://localhost:44336" },
+                    RedirectUris = {"https://localhost:44336/login"},
+                    PostLogoutRedirectUris = {"https://localhost:44336/"},
+                    AllowedCorsOrigins = {"https://localhost:44336"},
+
+                    AllowedScopes =
+                    {
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Profile,
+                        "weather-api"
+                    }
+                },
+
+                // WPF Client
+                new Client
+                {
+                    ClientId = "wpf-client",
+                    ClientName = "WPF Client",
+                    AllowedGrantTypes = GrantTypes.DeviceFlow,
+                    RequirePkce = true,
+                    RequireConsent = true,
 
                     AllowedScopes =
                     {

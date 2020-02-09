@@ -1,21 +1,30 @@
 ﻿@page
-@model Auth.Pages.Consent.IndexModel
+@model Auth.Pages.Device.IndexModel
 @{
-    ViewData["Title"] = "Authorization consent";
+    ViewData["Title"] = "Device authorization";
 }
 
-@if (!string.IsNullOrWhiteSpace(Model.RedirectUrl))
+@if (string.IsNullOrWhiteSpace(Model.Model.UserCode))
 {
-    <partial name="Shared/_RedirectPartial" model="@Model.RedirectUrl" />
+    <div class="page-header">
+        <h1>User Code</h1>
+        <p>
+            Please enter the code displayed on your device
+        </p>
+        <form asp-page="/Device/Index" method="post">
+            <input for="UserCode" name="UserCode" class="form-control" />
+            <button class="btn btn-primary">Submit</button>
+        </form>
+    </div>
 }
 else
 {
-    <div class="page-consent">
+    <div class="page-header">
         <div class="row page-header">
             <div class="col-sm-10">
                 @if (Model.Model.ClientLogoUrl != null)
                 {
-                    <div class="client-logo"><img src="@Model.Model.ClientLogoUrl"></div>
+                    <div class="client-logo"><img src="@Model.Model.ClientLogoUrl" alt="@Model.Model.ClientName"></div>
                 }
                 <h1>
                     @Model.Model.ClientName
@@ -24,12 +33,23 @@ else
             </div>
         </div>
 
+        @if (Model.Model.ConfirmUserCode)
+        {
+            <div class="row">
+                <div class="col-sm-8">
+                    <p>
+                        Please confirm that the authorization request quotes the code: "@Model.Model.UserCode".
+                    </p>
+                </div>
+            </div>
+        }
+
         <div class="row">
             <div class="col-sm-8">
                 <partial name="_ValidationSummary" />
 
-                <form asp-page="/Consent/Index" class="consent-form">
-                    <input type="hidden" asp-for="Model.ReturnUrl" />
+                <form asp-page="/Device/Callback" class="consent-form">
+                    <input asp-for="Model.UserCode" type="hidden" value="@Model.Model.UserCode" />
 
                     <div>Uncheck the permissions you do not wish to grant.</div>
 
@@ -37,7 +57,8 @@ else
                     {
                         <div class="card consent-buttons">
                             <div class="card-header">
-                                <span class="fas fa-user"></span> Personal Information
+                                <span class="fas fa-user"></span>
+                                Personal Information
                             </div>
                             <ul class="list-group">
                                 @foreach (var scope in Model.Model.IdentityScopes)
@@ -52,7 +73,8 @@ else
                     {
                         <div class="card">
                             <div class="card-header">
-                                <span class="fas fa-tasks"></span> Application Access
+                                <span class="fas fa-tasks"></span>
+                                Application Access
                             </div>
                             <ul class="list-group">
                                 @foreach (var scope in Model.Model.ResourceScopes)
@@ -74,8 +96,8 @@ else
                     }
 
                     <div class="consent-buttons">
-                        <button name="Model.Button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
-                        <button name="Model.Button" value="no" class="btn">No, Do Not Allow</button>
+                        <button name="button" value="yes" class="btn btn-primary" autofocus>Yes, Allow</button>
+                        <button name="button" value="no" class="btn">No, Do Not Allow</button>
                         @if (Model.Model.ClientUrl != null)
                         {
                             <a class="float-right btn btn-outline-primary" target="_blank" href="@Model.Model.ClientUrl">
@@ -89,4 +111,3 @@ else
         </div>
     </div>
 }
-
