@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Auth.Admin.Extensions;
@@ -74,6 +75,7 @@ namespace Auth.Admin.Pages.Clients
 
             if (isNew)
             {
+                PrepareClientTypeForNewClient(Client);
                 client = Client.ToEntity();
                 await _dbContext.Clients.AddAsync(client);
             }
@@ -122,6 +124,36 @@ namespace Auth.Admin.Pages.Clients
             RefreshTokenUsages = EnumExtensions.ToSelectList<TokenUsage>();
             Scopes = await GetScopes();
             GrantTypes = PredefinedData.GetGrantTypes();
+        }
+
+        private void PrepareClientTypeForNewClient(ClientModel client)
+        {
+            switch (client.ClientType)
+            {
+                case ClientType.Empty:
+                    break;
+                case ClientType.WebHybrid:
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.Hybrid);
+                    break;
+                case ClientType.Spa:
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.Code);
+                    client.RequirePkce = true;
+                    client.RequireClientSecret = false;
+                    break;
+                case ClientType.Native:
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.Hybrid);
+                    break;
+                case ClientType.Machine:
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.ResourceOwnerPasswordAndClientCredentials);
+                    break;
+                case ClientType.Device:
+                    client.AllowedGrantTypes.AddRange(IdentityServer4.Models.GrantTypes.DeviceFlow);
+                    client.RequireClientSecret = false;
+                    client.AllowOfflineAccess = true;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
