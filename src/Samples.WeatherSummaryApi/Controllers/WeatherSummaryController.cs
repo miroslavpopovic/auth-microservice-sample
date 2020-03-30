@@ -20,12 +20,19 @@ namespace Samples.WeatherSummaryApi.Controllers
         }
 
         [HttpGet]
-        public async Task<WeatherSummary> Get()
+        public async Task<ActionResult<WeatherSummary>> Get()
         {
             // This is using an existing access_token, to also call another API
             // It needs to include another API scope too
 
-            var accessToken = HttpContext.Request.Headers["Authorization"][0].Replace("Bearer ", string.Empty);
+            var authorizationHeader = HttpContext.Request.Headers["Authorization"];
+
+            if (authorizationHeader.Count == 0)
+            {
+                return Unauthorized();
+            }
+
+            var accessToken = authorizationHeader[0].Replace("Bearer ", string.Empty);
 
             _client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", accessToken);

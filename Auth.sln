@@ -19,7 +19,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.WeatherApi.AureliaC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Auth.Admin", "src\Auth.Admin\Auth.Admin.csproj", "{BD450A5F-DAA8-40C6-978F-15D92FBB6A08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.WeatherApi.WpfClient", "src\Samples.WeatherApi.WpfClient\Samples.WeatherApi.WpfClient.csproj", "{EFCBB505-2BDF-4E01-A51E-0CAE4F6D5F57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Samples.WeatherApi.WpfClient", "src\Samples.WeatherApi.WpfClient\Samples.WeatherApi.WpfClient.csproj", "{EFCBB505-2BDF-4E01-A51E-0CAE4F6D5F57}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C8480357-76FA-413B-A7D1-7AF5E7C863C4}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
