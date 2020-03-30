@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  auth-db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    networks:
+      - overlay
+
+  auth:
+    image: ${DOCKER_REGISTRY-}auth
+    build:
+      context: .
+      dockerfile: src/Auth/Dockerfile
+    networks:
+      - overlay
+
+volumes:
+  sqlserverdata:
+    driver: local
+  sqlserverlog:
+    driver: local
+
+networks:
+  overlay:
