@@ -14,6 +14,14 @@ services:
     networks:
       - overlay
 
+  auth-admin:
+    image: ${DOCKER_REGISTRY-}auth-admin
+    build:
+      context: .
+      dockerfile: src/Auth.Admin/Dockerfile
+    networks:
+      - overlay
+
 volumes:
   sqlserver:
     driver: local
