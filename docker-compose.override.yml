@@ -4,20 +4,20 @@ services:
   auth-db:
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: authpass1
+      SA_PASSWORD: AuthPa$$1
       MSSQL_PID: Developer
+    ports:
+      - 1401:1433
     volumes:
-      - sqlserverdata:/var/opt/mssql/data
-      - sqlserverlog:/var/opt/mssql/log
+      - sqlserver:/var/opt/mssql
 
   auth:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionStrings__DefaultConnection=Server=auth-db;Database=AuthIdentity;User Id=sa;Password=authpass1;MultipleActiveResultSets=true
+      - ConnectionStrings__DefaultConnection=Server=auth-db;Database=AuthIdentity;User Id=sa;Password=AuthPa$$1;MultipleActiveResultSets=true
     ports:
-      - "80"
-      - "443"
+      - 44396:443
     volumes:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro

@@ -15,9 +15,7 @@ services:
       - overlay
 
 volumes:
-  sqlserverdata:
-    driver: local
-  sqlserverlog:
+  sqlserver:
     driver: local
 
 networks:
