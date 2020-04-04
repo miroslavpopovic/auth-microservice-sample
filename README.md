@@ -62,6 +62,8 @@ It will now capture all emails sent from Auth project. You can see them on https
 
 ## Running the solution
 
+### Using Kestrel or IISExpress
+
 _Note: The solution contains multiple web projects, configured to run on specific ports. HTTPS addresses with ports are hard-coded throughout the code, for auth URLs and. The same ports are configured for both IISExpress and Kestrel, so you can use either._
 
 If using Visual Studio 2019+, you can open `Auth.sln` solution. To run multiple projects, right click on the solution in Solution Explorer and choose "Set StartUp Projects...". Select "Multiple" and pick the ones you want to start.
@@ -81,6 +83,20 @@ If running from the command line, you can start the projects you need from the r
 If on Windows, there's a convenient PowerShell script to run all web projects at once:
 
     .\run-web-projects.ps1
+
+### Using Docker
+
+The solution is ready to run with Docker too. It has `Dockerfile` files for each web project and `docker-compose.yml` and `docker-compose.override.yml` scripts for running all web projects.
+
+However, while running all projects and communication between them was easy without Docker since we were using same `localhost`. Running in Docker is a bit tricky since we basically have multiple machines involved and each has its own `localhost` DNS entry. We can use internal Docker network, and refer to each machine through its DNS name, assigned by Docker Compose, but that would work only for machine to machine communication. When we add browser on the host to the mix, things start to fall apart. I.e. if we use `htpps://auth` as Authority in `auth-admin`, it will successfully retrieve OIDC config file, but will redirect the host browser to that address too, for login, and browser will fail, since host is not the part of the same network.
+
+There are multiple ways this can be solved. For instance, we could configure the Docker Compose to use the host network, or we could use `host.docker.internal` DNS entry that Docker Compose creates in Windows `hosts` file (points to the current local IP address of the host), or we could modify DNS entries, etc.
+
+The way it is solved in this repository is by defining a new DNS entry (similar to `host.docker.internal`) in `c:\Windows\system32\drivers\etc\hosts`. That host entry is named `auth.sample.local`. You can (and should) make sure that the entry exists in `hosts` file before running `docker-compose`. This is partially automated. Just run the **`update-hosts-entry.ps1`** script from the repostory root as an admin. It will pick up your current local IP address and create or update the entry in `hosts` file. Note that this works on Windows too. For Linux or Mac, it's even simpler. Just add/update the entry in `/etc/hosts` file.
+
+All web projects have `appsettings.Docker.json` files with settings overrides for Docker environment.
+
+To run everything, either run `docker-compose` project from Visual Studio, or run `docker-compose up` from the command line.
 
 ## License
 

@@ -4,7 +4,7 @@ services:
   auth-db:
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: AuthPa$$1
+      SA_PASSWORD: AuthPa$$1    # Note that $ needs to be escaped as $$ - so pass is actually AuthPa$1
       MSSQL_PID: Developer
     ports:
       - 1401:1433
@@ -13,9 +13,8 @@ services:
 
   auth:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionStrings__DefaultConnection=Server=auth-db;Database=AuthIdentity;User Id=sa;Password=AuthPa$$1;MultipleActiveResultSets=true
     ports:
       - 44396:443
     volumes:
@@ -24,9 +23,8 @@ services:
 
   auth-admin:
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Docker
       - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionStrings__DefaultConnection=Server=auth-db;Database=AuthIdentity;User Id=sa;Password=AuthPa$$1;MultipleActiveResultSets=true
     ports:
       - 44344:443
     volumes:
