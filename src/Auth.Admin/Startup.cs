@@ -42,7 +42,7 @@ namespace Auth.Admin
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {
-                    options.Authority = Configuration.GetValue<string>("OpenIDConnect:Authority");
+                    options.Authority = $"{Configuration.GetValue<string>("ApplicationUrlPrefix")}:44396";
 
                     options.ClientId = "auth-admin-client";
                     options.ClientSecret = "secret";

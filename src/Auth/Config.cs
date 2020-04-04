@@ -6,7 +6,6 @@ using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Auth
@@ -27,13 +26,8 @@ namespace Auth
                 new ApiResource("weather-summary-api", "Weather Summary API")
             };
 
-        public static IEnumerable<Client> GetClients(IConfiguration configuration)
+        public static IEnumerable<Client> GetClients(string applicationUrlPrefix)
         {
-            var clientsConfig = configuration.GetSection("Clients");
-            var mvcClientConfig = clientsConfig.GetSection("MvcClient");
-            var authAdminClientConfig = clientsConfig.GetSection("AuthAdminClient");
-            var javaScriptClientConfig = clientsConfig.GetSection("JavaScriptClient");
-
             return new List<Client>
             {
                 // Machine to machine client
@@ -77,12 +71,10 @@ namespace Auth
                     RequirePkce = true,
 
                     // where to redirect to after login
-                    RedirectUris =
-                        mvcClientConfig.GetSection("RedirectUris").Get<string[]>(),
+                    RedirectUris = {$"{applicationUrlPrefix}:44316/signin-oidc"},
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris =
-                        mvcClientConfig.GetSection("PostLogoutRedirectUris").Get<string[]>(),
+                    PostLogoutRedirectUris = {$"{applicationUrlPrefix}:44316/signout-callback-oidc" },
 
                     AllowedScopes = new List<string>
                     {
@@ -106,12 +98,10 @@ namespace Auth
                     RequirePkce = true,
 
                     // where to redirect to after login
-                    RedirectUris =
-                        authAdminClientConfig.GetSection("RedirectUris").Get<string[]>(),
+                    RedirectUris = {$"{applicationUrlPrefix}:44344/signin-oidc"},
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris =
-                        authAdminClientConfig.GetSection("PostLogoutRedirectUris").Get<string[]>(),
+                    PostLogoutRedirectUris = {$"{applicationUrlPrefix}:44344/signout-callback-oidc"},
 
                     AllowedScopes = new List<string>
                     {
@@ -132,12 +122,9 @@ namespace Auth
                     RequireClientSecret = false,
                     RequireConsent = true,
 
-                    RedirectUris =
-                        javaScriptClientConfig.GetSection("RedirectUris").Get<string[]>(),
-                    PostLogoutRedirectUris =
-                        javaScriptClientConfig.GetSection("PostLogoutRedirectUris").Get<string[]>(),
-                    AllowedCorsOrigins =
-                        javaScriptClientConfig.GetSection("AllowedCorsOrigins").Get<string[]>(),
+                    RedirectUris = {$"{applicationUrlPrefix}:44336/login" },
+                    PostLogoutRedirectUris = {$"{applicationUrlPrefix}:44336/" },
+                    AllowedCorsOrigins = {$"{applicationUrlPrefix}:44336/" },
 
                     AllowedScopes =
                     {
@@ -169,7 +156,7 @@ namespace Auth
             };
         }
 
-        public static void InitializeDatabase(IApplicationBuilder app, IConfiguration configuration)
+        public static void InitializeDatabase(IApplicationBuilder app, string applicationUrlPrefix)
         {
             using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
 
@@ -178,7 +165,7 @@ namespace Auth
 
             if (!context.Clients.Any())
             {
-                foreach (var client in GetClients(configuration))
+                foreach (var client in GetClients(applicationUrlPrefix))
                 {
                     context.Clients.Add(client.ToEntity());
                 }

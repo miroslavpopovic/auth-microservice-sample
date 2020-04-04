@@ -1,7 +1,11 @@
 ﻿@page
+@using Microsoft.Extensions.Configuration
 @model IndexModel
+@inject IConfiguration Configuration
+
 @{
     ViewData["Title"] = "Home page";
+    var applicationUrlPrefix = Configuration.GetValue<string>("ApplicationUrlPrefix");
 }
 
 <div>
@@ -9,11 +13,11 @@
     <hr />
     <h2>Launch Auth samples</h2>
     <ul>
-        <li><a href="https://localhost:44396/" target="_blank">Auth</a></li>
-        <li><a href="https://localhost:44344/" target="_blank">Auth.Admin</a></li>
-        <li><a href="https://localhost:44373/weatherforecast" target="_blank">Weather API</a></li>
-        <li><a href="https://localhost:44303/weathersummary" target="_blank">Weather Summary API</a></li>
-        <li><a href="https://localhost:44336/" target="_blank">Aurelia client</a></li>
-        <li><a href="https://localhost:44316/" target="_blank">MVC Client</a></li>
+        <li><a href="@applicationUrlPrefix:44396/" target="_blank">Auth</a></li>
+        <li><a href="@applicationUrlPrefix:44344/" target="_blank">Auth.Admin</a></li>
+        <li><a href="@applicationUrlPrefix:44373/weatherforecast" target="_blank">Weather API</a></li>
+        <li><a href="@applicationUrlPrefix:44303/weathersummary" target="_blank">Weather Summary API</a></li>
+        <li><a href="@applicationUrlPrefix:44336/" target="_blank">Aurelia client</a></li>
+        <li><a href="@applicationUrlPrefix:44316/" target="_blank">MVC Client</a></li>
     </ul>
 </div>
