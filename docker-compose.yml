@@ -6,6 +6,11 @@ services:
     networks:
       - overlay
 
+  email:
+    image: mailhog/mailhog
+    networks:
+      - overlay
+
   auth:
     image: ${DOCKER_REGISTRY-}auth
     build:

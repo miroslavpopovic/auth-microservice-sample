@@ -15,15 +15,16 @@ namespace Auth.Admin
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.ConfigureAppConfiguration(
-                        (context, builder) =>
-                        {
-                            if (context.HostingEnvironment.IsEnvironment("Docker"))
+                    webBuilder
+                        .ConfigureAppConfiguration(
+                            (context, builder) =>
                             {
-                                builder.AddUserSecrets(typeof(Program).Assembly);
-                            }
-                        });
-                    webBuilder.UseStartup<Startup>();
+                                if (context.HostingEnvironment.IsEnvironment("Docker"))
+                                {
+                                    builder.AddUserSecrets(typeof(Program).Assembly);
+                                }
+                            })
+                        .UseStartup<Startup>();
                 });
     }
 }

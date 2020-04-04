@@ -93,7 +93,7 @@ namespace Auth
         {
             Config.InitializeDatabase(app, Configuration.GetValue<string>("ApplicationUrlPrefix"));
 
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Docker"))
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();

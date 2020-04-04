@@ -11,6 +11,13 @@ services:
     volumes:
       - sqlserver:/var/opt/mssql
 
+  email:
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - overlay
+
   auth:
     environment:
       - ASPNETCORE_ENVIRONMENT=Docker
