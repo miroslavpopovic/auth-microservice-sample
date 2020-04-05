@@ -1,4 +1,4 @@
-﻿{
+{
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
@@ -10,7 +10,6 @@
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
-      "launchBrowser": false,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -18,10 +17,17 @@
     "Samples.WeatherApi.AureliaClient": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:44336;http://localhost:58173",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      }
+      },
+      "applicationUrl": "https://localhost:44336;http://localhost:58173"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      //"launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "launchUrl": "https://auth.sample.local:44336/",
+      "publishAllPorts": true,
+      "useSSL": true
     }
   }
 }

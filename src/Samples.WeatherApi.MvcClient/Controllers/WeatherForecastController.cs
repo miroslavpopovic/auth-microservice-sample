@@ -3,19 +3,25 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
 namespace Samples.WeatherApi.MvcClient.Controllers
 {
     public class WeatherForecastController : Controller
     {
-        private const string WeatherForecastApiUrl = "https://localhost:44373/weatherforecast";
-        private const string WeatherSummaryApiUrl = "https://localhost:44303/weathersummary";
         private readonly HttpClient _forecastClient;
         private readonly HttpClient _summaryClient;
+        private readonly string _weatherForecastApiUrl;
+        private readonly string _weatherSummaryApiUrl;
 
-        public WeatherForecastController(IHttpClientFactory clientFactory)
+        public WeatherForecastController(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
+            var urlPrefix = configuration.GetValue<string>("ApplicationUrlPrefix");
+
+            _weatherForecastApiUrl = $"{urlPrefix}:44373/weatherforecast";
+            _weatherSummaryApiUrl = $"{urlPrefix}:44303/weathersummary";
+
             _forecastClient = clientFactory.CreateClient("weather-api-client");
             _summaryClient = clientFactory.CreateClient("weather-summary-api-client");
         }
@@ -27,11 +33,17 @@ namespace Samples.WeatherApi.MvcClient.Controllers
 
             var accessToken = await HttpContext.GetTokenAsync("access_token");
 
-            var client = new HttpClient();
+            var httpClientHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback =
+                    HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+            };
+
+            var client = new HttpClient(httpClientHandler);
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", accessToken);
 
-            var content = await client.GetStringAsync(WeatherForecastApiUrl);
+            var content = await client.GetStringAsync(_weatherForecastApiUrl);
 
             ViewBag.WeatherForecastData = JArray.Parse(content).ToString();
 
@@ -43,7 +55,7 @@ namespace Samples.WeatherApi.MvcClient.Controllers
             // This is using a separate API Client to get access token
             // for accessing Weather API using the Client Credentials
 
-            var content = await _forecastClient.GetStringAsync(WeatherForecastApiUrl);
+            var content = await _forecastClient.GetStringAsync(_weatherForecastApiUrl);
 
             ViewBag.WeatherForecastData = JArray.Parse(content).ToString();
 
@@ -55,7 +67,7 @@ namespace Samples.WeatherApi.MvcClient.Controllers
             // This is using a separate API Client to get access token
             // for accessing Weather API using the Client Credentials
 
-            var content = await _summaryClient.GetStringAsync(WeatherSummaryApiUrl);
+            var content = await _summaryClient.GetStringAsync(_weatherSummaryApiUrl);
 
             ViewBag.WeatherSummaryData = JObject.Parse(content).ToString();
 

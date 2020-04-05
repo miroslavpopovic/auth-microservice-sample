@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using IdentityModel.Client;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -28,6 +29,8 @@ namespace Samples.WeatherApi.MvcClient
 
             services.AddControllersWithViews();
 
+            var urlPrefix = Configuration.GetValue<string>("ApplicationUrlPrefix");
+
             services
                 .AddAuthentication(options =>
                 {
@@ -37,7 +40,12 @@ namespace Samples.WeatherApi.MvcClient
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                     {
-                        options.Authority = "https://localhost:44396";
+                        options.Authority = $"{urlPrefix}:44396";
+
+                        options.BackchannelHttpHandler = new HttpClientHandler
+                        {
+                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        };
 
                         options.ClientId = "mvc-client";
                         options.ClientSecret = "secret";
@@ -59,13 +67,19 @@ namespace Samples.WeatherApi.MvcClient
                         options.Client.Clients.Add(
                             "auth", new ClientCredentialsTokenRequest
                             {
-                                Address = "https://localhost:44396/connect/token",
+                                Address = $"{urlPrefix}:44396/connect/token",
                                 ClientId = "weather-api-mvc-client",
                                 ClientSecret = "secret",
                                 Scope = "weather-api"
                             });
                     })
                 .ConfigureBackchannelHttpClient()
+                .ConfigurePrimaryHttpMessageHandler(
+                    () => new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    })
                 .AddTransientHttpErrorPolicy(
                     policy =>
                         policy.WaitAndRetryAsync(
@@ -76,13 +90,27 @@ namespace Samples.WeatherApi.MvcClient
                                 TimeSpan.FromSeconds(3)
                             }));
 
-            services.AddClientAccessTokenClient(
-                "weather-api-client",
-                configureClient: client => { client.BaseAddress = new Uri("https://localhost:44373/"); });
+            services
+                .AddClientAccessTokenClient(
+                    "weather-api-client",
+                    configureClient: client => { client.BaseAddress = new Uri($"{urlPrefix}:44373/"); })
+                .ConfigurePrimaryHttpMessageHandler(
+                    () => new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    });
 
-            services.AddClientAccessTokenClient(
-                "weather-summary-api-client",
-                configureClient: client => { client.BaseAddress = new Uri("https://localhost:44303/"); });
+            services
+                .AddClientAccessTokenClient(
+                    "weather-summary-api-client",
+                    configureClient: client => { client.BaseAddress = new Uri($"{urlPrefix}:44303/"); })
+                .ConfigurePrimaryHttpMessageHandler(
+                    () => new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

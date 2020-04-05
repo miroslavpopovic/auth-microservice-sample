@@ -27,6 +27,38 @@ services:
     networks:
       - overlay
 
+  auth-sample-weather-api:
+    image: ${DOCKER_REGISTRY-}auth-sample-weather-api
+    build:
+      context: .
+      dockerfile: src/Samples.WeatherApi/Dockerfile
+    networks:
+      - overlay
+
+  auth-sample-weathersummary-api:
+    image: ${DOCKER_REGISTRY-}auth-sample-weathersummary-api
+    build:
+      context: .
+      dockerfile: src/Samples.WeatherSummaryApi/Dockerfile
+    networks:
+      - overlay
+
+  auth-sample-mvc-client:
+    image: ${DOCKER_REGISTRY-}auth-sample-mvc-client
+    build:
+      context: .
+      dockerfile: src/Samples.WeatherApi.MvcClient/Dockerfile
+    networks:
+      - overlay
+
+  auth-sample-aurelia-client:
+    image: ${DOCKER_REGISTRY-}auth-sample-aurelia-client
+    build:
+      context: .
+      dockerfile: src/Samples.WeatherApi.AureliaClient/Dockerfile
+    networks:
+      - overlay
+
 volumes:
   sqlserver:
     driver: local

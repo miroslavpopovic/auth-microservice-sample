@@ -115,7 +115,7 @@ namespace Auth
                 // JavaScript Client
                 new Client
                 {
-                    ClientId = "aurelia",
+                    ClientId = "aurelia-client",
                     ClientName = "Aurelia Client",
                     AllowedGrantTypes = GrantTypes.Code,
                     RequirePkce = true,
@@ -124,7 +124,7 @@ namespace Auth
 
                     RedirectUris = {$"{applicationUrlPrefix}:44336/login" },
                     PostLogoutRedirectUris = {$"{applicationUrlPrefix}:44336/" },
-                    AllowedCorsOrigins = {$"{applicationUrlPrefix}:44336/" },
+                    AllowedCorsOrigins = {$"{applicationUrlPrefix}:44336" },
 
                     AllowedScopes =
                     {

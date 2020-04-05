@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
@@ -6,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
-<body aurelia-app="main">
+<body aurelia-app="main" data-url-prefix="@(Configuration.GetValue<string>("ApplicationUrlPrefix"))">
     <script src="~/scripts/vendor-bundle.js" data-main="aurelia-bootstrapper"></script>
 </body>
 </html>

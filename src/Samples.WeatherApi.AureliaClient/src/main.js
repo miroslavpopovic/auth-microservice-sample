@@ -16,16 +16,18 @@ export function configure(aurelia) {
         aurelia.use.plugin('aurelia-testing');
     }
 
-    let container = aurelia.container;
+    const container = aurelia.container;
+    const urlPrefix = aurelia.host.dataset.urlPrefix;
+    console.log('Element dataset:', aurelia.host.dataset);
 
     // Register UserManager instance with Aurelia container
     let userManager = new Oidc.UserManager({
-        authority: 'https://localhost:44396',
+        authority: `${urlPrefix}:44396`,
         client_id: 'aurelia-client',
-        redirect_uri: 'https://localhost:44336/login',
+        redirect_uri: `${urlPrefix}:44336/login`,
         response_type: 'code',
         scope: 'openid profile weather-api',
-        post_logout_redirect_uri: 'https://localhost:44336/'
+        post_logout_redirect_uri: `${urlPrefix}:44336/`
     });
     container.registerInstance(Oidc.UserManager, userManager);
 
@@ -34,7 +36,7 @@ export function configure(aurelia) {
     httpClient.configure(config => {
         config
             .useStandardConfiguration()
-            .withBaseUrl('https://localhost:44373/')
+            .withBaseUrl(`${urlPrefix}:44373/`)
             .withDefaults({
                 credentials: 'same-origin',
                 headers: {
@@ -45,7 +47,7 @@ export function configure(aurelia) {
                 request(request) {
                     return userManager.getUser()
                         .then(user => {
-                            request.headers.append('Authorization', 'Bearer ' + user.access_token);
+                            request.headers.append('Authorization', `Bearer ${user.access_token}`);
                             return request;
                         });
                 }

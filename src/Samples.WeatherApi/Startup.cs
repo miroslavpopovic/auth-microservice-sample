@@ -1,3 +1,4 @@
+using System.Net.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -14,19 +15,25 @@ namespace Samples.WeatherApi
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            var urlPrefix = Configuration.GetValue<string>("ApplicationUrlPrefix");
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                     {
-                        options.Authority = "https://localhost:44396";
+                        options.Authority = $"{urlPrefix}:44396";
                         options.Audience = "weather-api";
+
+                        options.BackchannelHttpHandler = new HttpClientHandler
+                        {
+                            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                        };
                     });
 
             // CORS policy for JavaScript clients
@@ -37,7 +44,7 @@ namespace Samples.WeatherApi
                         "default", policy =>
                         {
                             policy
-                                .WithOrigins("https://localhost:44336")
+                                .WithOrigins($"{urlPrefix}:44336")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                         });

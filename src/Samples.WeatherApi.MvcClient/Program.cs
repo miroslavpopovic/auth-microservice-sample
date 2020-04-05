@@ -1,11 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 namespace Samples.WeatherApi.MvcClient
 {
@@ -16,11 +11,20 @@ namespace Samples.WeatherApi.MvcClient
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder
+                        .ConfigureAppConfiguration(
+                            (context, builder) =>
+                            {
+                                if (context.HostingEnvironment.IsEnvironment("Docker"))
+                                {
+                                    builder.AddUserSecrets(typeof(Program).Assembly);
+                                }
+                            })
+                        .UseStartup<Startup>();
                 });
     }
 }

@@ -178,21 +178,23 @@ define('main',["exports", "regenerator-runtime/runtime", "./environment", "oidc-
       aurelia.use.plugin('aurelia-testing');
     }
 
-    var container = aurelia.container; // Register UserManager instance with Aurelia container
+    var container = aurelia.container;
+    var urlPrefix = aurelia.host.dataset.urlPrefix;
+    console.log('Element dataset:', aurelia.host.dataset); // Register UserManager instance with Aurelia container
 
     var userManager = new _oidcClient.default.UserManager({
-      authority: 'https://localhost:44396',
-      client_id: 'aurelia',
-      redirect_uri: 'https://localhost:44336/login',
+      authority: urlPrefix + ":44396",
+      client_id: 'aurelia-client',
+      redirect_uri: urlPrefix + ":44336/login",
       response_type: 'code',
       scope: 'openid profile weather-api',
-      post_logout_redirect_uri: 'https://localhost:44336/'
+      post_logout_redirect_uri: urlPrefix + ":44336/"
     });
     container.registerInstance(_oidcClient.default.UserManager, userManager); // Register HttpClient instance with Aurelia container
 
     var httpClient = new _aureliaFetchClient.HttpClient();
     httpClient.configure(function (config) {
-      config.useStandardConfiguration().withBaseUrl('https://localhost:44373/').withDefaults({
+      config.useStandardConfiguration().withBaseUrl(urlPrefix + ":44373/").withDefaults({
         credentials: 'same-origin',
         headers: {
           'X-Requested-With': 'Fetch'
@@ -200,7 +202,7 @@ define('main',["exports", "regenerator-runtime/runtime", "./environment", "oidc-
       }).withInterceptor({
         request: function request(_request) {
           return userManager.getUser().then(function (user) {
-            _request.headers.append('Authorization', 'Bearer ' + user.access_token);
+            _request.headers.append('Authorization', "Bearer " + user.access_token);
 
             return _request;
           });

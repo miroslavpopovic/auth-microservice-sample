@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,13 +22,19 @@ namespace Samples.WeatherSummaryApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            var urlPrefix = Configuration.GetValue<string>("ApplicationUrlPrefix");
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
-                    options.Authority = "https://localhost:44396";
+                    options.Authority = $"{urlPrefix}:44396";
                     options.Audience = "weather-summary-api";
+
+                    options.BackchannelHttpHandler = new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    };
                 });
 
             // CORS policy for JavaScript clients
@@ -38,15 +45,22 @@ namespace Samples.WeatherSummaryApi
                         "default", policy =>
                         {
                             policy
-                                .WithOrigins("https://localhost:44222")
+                                .WithOrigins($"{urlPrefix}:44222")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                         });
                 });
 
-            services.AddHttpClient(
-                "weather-api-client",
-                client => { client.BaseAddress = new Uri("https://localhost:44373/weatherforecast"); });
+            services
+                .AddHttpClient(
+                    "weather-api-client",
+                    client => { client.BaseAddress = new Uri($"{urlPrefix}:44373/weatherforecast"); })
+                .ConfigurePrimaryHttpMessageHandler(
+                    () => new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback =
+                            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
