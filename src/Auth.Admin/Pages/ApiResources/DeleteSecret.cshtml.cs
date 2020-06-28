@@ -29,7 +29,7 @@ namespace Auth.Admin.Pages.ApiResources
 
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            var secret = await _dbContext.FindAsync<ApiSecret>(id);
+            var secret = await _dbContext.FindAsync<ApiResourceSecret>(id);
 
             if (secret == null)
             {
@@ -52,7 +52,7 @@ namespace Auth.Admin.Pages.ApiResources
 
         public async Task<IActionResult> OnPostAsync()
         {
-            var secret = await _dbContext.FindAsync<ApiSecret>(Id);
+            var secret = await _dbContext.FindAsync<ApiResourceSecret>(Id);
 
             if (secret == null)
             {

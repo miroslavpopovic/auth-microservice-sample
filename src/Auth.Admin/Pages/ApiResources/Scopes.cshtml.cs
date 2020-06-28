@@ -89,11 +89,12 @@ namespace Auth.Admin.Pages.ApiResources
             if (Scope.Id == 0)
             {
                 scope = Scope.ToEntity();
-                apiResource.Scopes.Add(scope);
+                apiResource.Scopes.Add(new ApiResourceScope {ApiResource = apiResource, Scope = scope.Name});
             }
             else
             {
-                scope = apiResource.Scopes.FirstOrDefault(x => x.Id == Scope.Id);
+                var apiResourceScope = apiResource.Scopes.First(x => x.Scope == Scope.Name);
+                scope = await _dbContext.ApiScopes.FirstOrDefaultAsync(x => x.Name == apiResourceScope.Scope);
                 Scope.ToEntity(scope);
             }
 
@@ -106,7 +107,6 @@ namespace Auth.Admin.Pages.ApiResources
         {
             return await _dbContext.ApiResources
                 .Include(x => x.Scopes)
-                .ThenInclude(x => x.UserClaims)
                 .SingleOrDefaultAsync(x => x.Id == id.Value);
         }
 

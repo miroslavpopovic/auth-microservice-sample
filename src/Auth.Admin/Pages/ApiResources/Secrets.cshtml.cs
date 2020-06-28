@@ -87,7 +87,7 @@ namespace Auth.Admin.Pages.ApiResources
             }
 
             apiResource.Secrets.Add(
-                new ApiSecret
+                new ApiResourceSecret
                 {
                     Created = DateTime.UtcNow,
                     Description = Description,

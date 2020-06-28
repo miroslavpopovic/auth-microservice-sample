@@ -6,23 +6,19 @@ using IdentityServer4.Extensions;
 using IdentityServer4.Models;
 using IdentityServer4.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
 
 namespace Auth.Pages.Device
 {
-    public class CallbackModel : PageModel
+    public class SuccessModel : DeviceAuthorizationPageModel
     {
         private readonly IDeviceFlowInteractionService _interaction;
         private readonly IEventService _events;
-        private readonly ILogger<IndexModel> _logger;
 
-        public CallbackModel(
-            IDeviceFlowInteractionService interaction, IEventService events, ILogger<IndexModel> logger)
+        public SuccessModel(IDeviceFlowInteractionService interaction, IEventService events)
+            : base(interaction)
         {
             _interaction = interaction;
             _events = events;
-            _logger = logger;
         }
 
         [BindProperty]
@@ -35,11 +31,6 @@ namespace Auth.Pages.Device
             if (result.HasValidationError)
             {
                 return RedirectToPage("/Error");
-            }
-
-            if (result.RedisplayConsentUI)
-            {
-                return RedirectToPage("/Device/Index", new {userCode = Model.UserCode});
             }
 
             return Page();
@@ -57,11 +48,13 @@ namespace Auth.Pages.Device
             // user clicked 'no' - send back the standard 'access_denied' response
             if (model.Button == "no")
             {
-                grantedConsent = ConsentResponse.Denied;
+                grantedConsent = new ConsentResponse{Error = AuthorizationError.AccessDenied};
 
                 // emit event
                 await _events.RaiseAsync(
-                    new ConsentDeniedEvent(User.GetSubjectId(), request.ClientId, request.ScopesRequested));
+                    new ConsentDeniedEvent(User.GetSubjectId(),
+                        request.Client.ClientId,
+                        request.ValidatedResources.RawScopeValues));
             }
             // user clicked 'yes' - validate the data
             else if (model.Button == "yes")
@@ -79,14 +72,18 @@ namespace Auth.Pages.Device
                     grantedConsent = new ConsentResponse
                     {
                         RememberConsent = model.RememberConsent,
-                        ScopesConsented = scopes.ToArray()
+                        ScopesValuesConsented = scopes.ToArray(),
+                        Description = model.Description
                     };
 
                     // emit event
                     await _events.RaiseAsync(
                         new ConsentGrantedEvent(
-                            User.GetSubjectId(), request.ClientId, request.ScopesRequested,
-                            grantedConsent.ScopesConsented, grantedConsent.RememberConsent));
+                            User.GetSubjectId(),
+                            request.Client.ClientId,
+                            request.ValidatedResources.RawScopeValues,
+                            grantedConsent.ScopesValuesConsented,
+                            grantedConsent.RememberConsent));
                 }
                 else
                 {
@@ -105,12 +102,12 @@ namespace Auth.Pages.Device
 
                 // indicate that's it ok to redirect back to authorization endpoint
                 result.RedirectUri = model.ReturnUrl;
-                result.ClientId = request.ClientId;
+                result.Client = request.Client;
             }
             else
             {
                 // we need to redisplay the consent UI
-                result.RedisplayConsentUI = true;
+                result.ViewModel = await BuildViewModelAsync(model.UserCode, model);
             }
 
             return result;

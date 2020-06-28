@@ -35,7 +35,8 @@ namespace Auth.Admin.Pages.ApiResources
             Id = id;
             Name = scope.Name;
 
-            var apiResource = await _dbContext.ApiResources.FindAsync(scope.ApiResourceId);
+            // TODO: Solve resource loading
+            var apiResource = new ApiResource(); // await _dbContext.ApiResources.FindAsync(scope.ApiResourceId);
             ApiResourceId = apiResource.Id;
             ApiResourceName = string.IsNullOrWhiteSpace(apiResource.DisplayName)
                 ? apiResource.Name
@@ -56,7 +57,9 @@ namespace Auth.Admin.Pages.ApiResources
             _dbContext.Remove(scope);
             await _dbContext.SaveChangesAsync();
 
-            return RedirectToPage("/ApiResources/Scopes", new { id = scope.ApiResourceId });
+            // TODO: Solve API resource
+            var apiResourceId = 0; // scope.ApiResourceId;
+            return RedirectToPage("/ApiResources/Scopes", new { id = apiResourceId });
         }
     }
 }

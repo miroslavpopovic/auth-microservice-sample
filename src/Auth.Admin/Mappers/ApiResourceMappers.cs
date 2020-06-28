@@ -29,7 +29,13 @@ namespace Auth.Admin.Mappers
             return Mapper.Map<ApiResourceScopeModel>(scope);
         }
 
-        public static ApiResourceSecretModel ToModel(this ApiSecret secret)
+        // TODO: This is not a good mapping
+        public static ApiResourceScopeModel ToModel(this ApiResourceScope scope)
+        {
+            return Mapper.Map<ApiResourceScopeModel>(scope);
+        }
+
+        public static ApiResourceSecretModel ToModel(this ApiResourceSecret secret)
         {
             return Mapper.Map<ApiResourceSecretModel>(secret);
         }

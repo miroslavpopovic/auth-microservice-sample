@@ -31,7 +31,7 @@ namespace Auth.Email
             };
 
             message.From.Add(new MailboxAddress(_options.FromName, _options.FromEmail));
-            message.To.Add(new MailboxAddress(email));
+            message.To.Add(new MailboxAddress(email, email));
 
             using var client = new SmtpClient();
 
