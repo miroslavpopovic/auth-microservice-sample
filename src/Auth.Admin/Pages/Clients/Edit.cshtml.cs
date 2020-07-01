@@ -99,7 +99,8 @@ namespace Auth.Admin.Pages.Clients
 
         private async Task<IEnumerable<string>> GetScopes()
         {
-            var apiScopes = await _dbContext.ApiResources.SelectMany(x => x.Scopes.Select(s => s.Name)).ToListAsync();
+            var apiScopes = await _dbContext.ApiResources
+                .SelectMany(x => x.Scopes.Select(s => s.Scope)).ToListAsync();
             var identityScopes = await _dbContext.IdentityResources.Select(x => x.Name).ToListAsync();
 
             return identityScopes.Concat(apiScopes);

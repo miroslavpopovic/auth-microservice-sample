@@ -1,22 +1,25 @@
-﻿using System.Threading.Tasks;
-using IdentityServer4.Stores;
+﻿using System;
+using IdentityServer4.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Auth.Extensions
 {
     public static class IdentityServerExtensions
     {
         /// <summary>
-        /// Determines whether the client is configured to use PKCE.
+        /// Checks if the redirect URI is for a native client.
         /// </summary>
-        /// <param name="store">The store.</param>
-        /// <param name="clientId">The client identifier.</param>
         /// <returns></returns>
-        public static async Task<bool> IsPkceClientAsync(this IClientStore store, string clientId)
+        public static bool IsNativeClient(this AuthorizationRequest context)
         {
-            if (string.IsNullOrWhiteSpace(clientId)) return false;
+            return !context.RedirectUri.StartsWith("https", StringComparison.Ordinal)
+                   && !context.RedirectUri.StartsWith("http", StringComparison.Ordinal);
+        }
 
-            var client = await store.FindEnabledClientByIdAsync(clientId);
-            return client?.RequirePkce == true;
+        public static IActionResult LoadingPage(this PageModel pageModel, string pageName, string redirectUri)
+        {
+            return pageModel.RedirectToPage(pageName, new {redirectUri});
         }
     }
 }

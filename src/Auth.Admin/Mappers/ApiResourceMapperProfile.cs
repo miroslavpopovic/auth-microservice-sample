@@ -15,7 +15,7 @@ namespace Auth.Admin.Mappers
             CreateMap<ApiScope, ApiResourceScopeModel>(MemberList.Destination)
                 .ForMember(x => x.UserClaims, opt => opt.MapFrom(src => src.UserClaims.Select(x => x.Type)));
 
-            CreateMap<ApiSecret, ApiResourceSecretModel>(MemberList.Destination)
+            CreateMap<ApiResourceSecret, ApiResourceSecretModel>(MemberList.Destination)
                 .ForMember(dest => dest.Type, opt => opt.Condition(srs => srs != null));
 
             CreateMap<ApiResourceProperty, ApiResourcePropertyModel>(MemberList.Destination)

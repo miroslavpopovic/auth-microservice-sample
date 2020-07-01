@@ -6,58 +6,66 @@
 
 @if (string.IsNullOrWhiteSpace(Model.Model.UserCode))
 {
-    <div class="page-header">
-        <h1>User Code</h1>
-        <p>
-            Please enter the code displayed on your device
-        </p>
-        <form asp-page="/Device/Index" method="post">
-            <div class="row">
-                <div class="col">
-                    <input for="UserCode" name="UserCode" class="form-control" />
-                </div>
-                <div class="col">
-                    <button class="btn btn-primary">Submit</button>
-                </div>
+    <div class="page-device-code">
+        <div class="lead">
+            <h1>User Code</h1>
+            <p>
+                Please enter the code displayed on your device
+            </p>
+        </div>
+
+        <partial name="Shared/_ValidationSummary" />
+
+        <div class="row">
+            <div class="col-sm-6">
+                <form asp-page="/Device/Index" method="post">
+                    <div class="form-group">
+                        <label for="userCode">User Code:</label>
+                        <input name="userCode" class="form-control" autofocus />
+                    </div>
+
+                    <button class="btn btn-primary" name="button">Submit</button>
+                </form>
             </div>
-        </form>
+        </div>
+
     </div>
 }
 else
 {
-    <div class="page-header">
-        <div class="row page-header">
-            <div class="col-sm-10">
-                @if (Model.Model.ClientLogoUrl != null)
-                {
-                    <div class="client-logo"><img src="@Model.Model.ClientLogoUrl" alt="@Model.Model.ClientName"></div>
-                }
-                <h1>
-                    @Model.Model.ClientName
-                    <small>is requesting your permission</small>
-                </h1>
-            </div>
-        </div>
+    <div class="page-device-confirmation">
+        <div class="lead">
+            @if (Model.Model.ClientLogoUrl != null)
+            {
+                <div class="client-logo"><img src="@Model.Model.ClientLogoUrl" alt="@Model.Model.ClientName"></div>
+            }
+            <h1>
+                @Model.Model.ClientName
+                <small class="text-muted">is requesting your permission</small>
+            </h1>
 
-        @if (Model.Model.ConfirmUserCode)
-        {
-            <div class="row">
-                <div class="col-sm-8">
-                    <p>
-                        Please confirm that the authorization request quotes the code: "@Model.Model.UserCode".
-                    </p>
-                </div>
-            </div>
-        }
+            @if (Model.Model.ConfirmUserCode)
+            {
+                <p>
+                    Please confirm that the authorization request quotes the code: <strong>@Model.Model.UserCode</strong>.
+                </p>
+            }
+
+            <p>Uncheck the permissions you do not wish to grant.</p>
+        </div>
 
         <div class="row">
             <div class="col-sm-8">
                 <partial name="_ValidationSummary" />
+            </div>
+        </div>
 
-                <form asp-page="/Device/Callback" class="consent-form">
+        <div class="row">
+            <div class="col-sm-8">
+
+                <form asp-page="/Device/Success" class="consent-form" method="post">
                     <input asp-for="Model.UserCode" type="hidden" value="@Model.Model.UserCode" />
 
-                    <div>Uncheck the permissions you do not wish to grant.</div>
 
                     @if (Model.Model.IdentityScopes.Any())
                     {
@@ -75,7 +83,7 @@ else
                         </div>
                     }
 
-                    @if (Model.Model.ResourceScopes.Any())
+                    @if (Model.Model.ApiScopes.Any())
                     {
                         <div class="card">
                             <div class="card-header">
@@ -83,7 +91,7 @@ else
                                 Application Access
                             </div>
                             <ul class="list-group">
-                                @foreach (var scope in Model.Model.ResourceScopes)
+                                @foreach (var scope in Model.Model.ApiScopes)
                                 {
                                     <partial name="_ScopeListItem" model="scope" />
                                 }

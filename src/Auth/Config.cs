@@ -19,11 +19,18 @@ namespace Auth
                 new IdentityResources.Profile()
             };
 
-        public static IEnumerable<ApiResource> Apis =>
+        public static IEnumerable<ApiScope> ApiScopes =>
+            new List<ApiScope>
+            {
+                new ApiScope("weather-api", "Weather API"),
+                new ApiScope("weather-summary-api", "Weather Summary API")
+            };
+
+        public static IEnumerable<ApiResource> ApiResources =>
             new List<ApiResource>
             {
-                new ApiResource("weather-api", "Weather API"),
-                new ApiResource("weather-summary-api", "Weather Summary API")
+                new ApiResource("weather-api", "Weather API") {Scopes = new[] {"weather-api"}},
+                new ApiResource("weather-summary-api", "Weather Summary API") {Scopes = new[] {"weather-summary-api"}}
             };
 
         public static IEnumerable<Client> GetClients(string applicationUrlPrefix)
@@ -181,9 +188,18 @@ namespace Auth
                 context.SaveChanges();
             }
 
+            if (!context.ApiScopes.Any())
+            {
+                foreach (var scope in ApiScopes)
+                {
+                    context.ApiScopes.Add(scope.ToEntity());
+                }
+                context.SaveChanges();
+            }
+
             if (!context.ApiResources.Any())
             {
-                foreach (var resource in Apis)
+                foreach (var resource in ApiResources)
                 {
                     context.ApiResources.Add(resource.ToEntity());
                 }

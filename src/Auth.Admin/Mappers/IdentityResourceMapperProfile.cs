@@ -16,7 +16,8 @@ namespace Auth.Admin.Mappers
                 .ReverseMap();
 
             CreateMap<IdentityResourceModel, IdentityResource>(MemberList.Source)
-                .ForMember(x => x.UserClaims, opts => opts.MapFrom(src => src.UserClaims.Select(x => new IdentityClaim { Type = x })));
+                .ForMember(x => x.UserClaims,
+                    opts => opts.MapFrom(src => src.UserClaims.Select(x => new IdentityResourceClaim {Type = x})));
         }
     }
 }
