@@ -42,7 +42,8 @@ namespace Auth
                         options.Events.RaiseSuccessEvents = true;
                     })
                 //.AddInMemoryIdentityResources(Config.Ids)
-                //.AddInMemoryApiResources(Config.Apis)
+                //.AddInMemoryApiScopes(Config.ApiScopes)
+                //.AddInMemoryApiResources(Config.ApiResources)
                 //.AddInMemoryClients(Config.Clients)
                 .AddConfigurationStore(options =>
                 {
