@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Samples.WeatherApi
 {
@@ -17,7 +18,6 @@ namespace Samples.WeatherApi
 
         private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -29,6 +29,15 @@ namespace Samples.WeatherApi
                     {
                         options.Authority = $"{urlPrefix}:44396";
                         options.Audience = "weather-api";
+
+#if DEBUG
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // HACK: DON'T SKIP ISSUER VALIDATION IN PRODUCTION!
+                            // We are using multiple issuers in debug - localhost and auth.sample.local
+                            ValidateIssuer = false
+                        };
+#endif
 
                         options.BackchannelHttpHandler = new HttpClientHandler
                         {
@@ -51,7 +60,6 @@ namespace Samples.WeatherApi
                 });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

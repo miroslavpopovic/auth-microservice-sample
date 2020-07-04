@@ -17,7 +17,6 @@ namespace Samples.WeatherApi.WorkerClient
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    // Still pre-release
                     services
                         .AddAccessTokenManagement(
                             options =>
