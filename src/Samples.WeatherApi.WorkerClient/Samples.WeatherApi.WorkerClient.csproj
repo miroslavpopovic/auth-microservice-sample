@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <UserSecretsId>dotnet-Samples.WeatherApi.WorkerClient-FD72F462-56C0-4CE0-A79B-AAADBE053018</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityModel" Version="4.3.0" />
-    <PackageReference Include="IdentityModel.AspNetCore" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.5" />
-    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="3.1.5" />
+    <PackageReference Include="IdentityModel" Version="4.5.0" />
+    <PackageReference Include="IdentityModel.AspNetCore" Version="3.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="5.0.0" />
   </ItemGroup>
 </Project>

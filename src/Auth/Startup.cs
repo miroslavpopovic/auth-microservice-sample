@@ -23,6 +23,8 @@ namespace Auth
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(
                 options =>  options.UseSqlServer(connectionString));
@@ -95,7 +97,7 @@ namespace Auth
             if (env.IsDevelopment() || env.IsEnvironment("Docker"))
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
+                app.UseMigrationsEndPoint();
             }
             else
             {

@@ -3,7 +3,7 @@ version: '3.4'
 services:
   auth-db:
     environment:
-      ACCEPT_EULA: Y
+      ACCEPT_EULA: "Y"
       SA_PASSWORD: AuthPa$$1    # Note that $ needs to be escaped as $$ - so pass is actually AuthPa$1
       MSSQL_PID: Developer
     ports:

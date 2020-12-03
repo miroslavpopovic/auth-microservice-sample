@@ -18,7 +18,7 @@ The next thing was adding and configuring IdentityServer4, by following [quickst
 
 ## Preparing
 
-This project requires .NET Core 3.1 SDK or higher.
+This project requires .NET 5.0 SDK or higher.
 
 ### Database connection strings
 
@@ -52,7 +52,7 @@ Alternatively, just remove Google (and/or IdentityServer Demo) auth from `Startu
 
 If you want to have email sending working, you either need to have a local SMTP server, or modify the SMTP settings in `appsettings.json` file of Auth project. The easiest way to have local SMTP server is to use [smtp4dev](https://github.com/rnwood/smtp4dev). Install it with:
 
-    dotnet tool install -g Rnwood.Smtp4dev --version "3.1.0-*"
+    dotnet tool install -g Rnwood.Smtp4dev
 
 Then run it with:
 
