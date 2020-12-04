@@ -339,3 +339,5 @@ ASALocalRun/
 # BeatPulse healthcheck temp database
 healthchecksdb
 src/Auth/wwwroot/images/profile/
+.tye/
+.data/

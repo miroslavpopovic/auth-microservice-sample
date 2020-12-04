@@ -2,6 +2,7 @@
 using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using MimeKit;
@@ -10,11 +11,14 @@ namespace Auth.Email
 {
     public class EmailSender : IEmailSender
     {
+        private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _environment;
         private readonly EmailOptions _options;
 
-        public EmailSender(IOptions<EmailOptions> options, IWebHostEnvironment environment)
+        public EmailSender(
+            IConfiguration configuration, IOptions<EmailOptions> options, IWebHostEnvironment environment)
         {
+            _configuration = configuration;
             _environment = environment;
             _options = options.Value;
         }
@@ -40,7 +44,17 @@ namespace Auth.Email
                 client.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
             }
 
-            await client.ConnectAsync(_options.Smtp.Host, _options.Smtp.Port, _options.Smtp.UseSsl);
+            var host = _options.Smtp.Host;
+            var port = _options.Smtp.Port;
+
+            var serviceUrl = _configuration.GetServiceUri("email", "smtp");
+            if (serviceUrl != null)
+            {
+                host = serviceUrl.Host;
+                port = serviceUrl.Port;
+            }
+
+            await client.ConnectAsync(host, port, _options.Smtp.UseSsl);
 
             await client.SendAsync(message);
 

@@ -6,6 +6,7 @@ using IdentityServer4.EntityFramework.Mappers;
 using IdentityServer4.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Auth
@@ -33,8 +34,12 @@ namespace Auth
                 new ApiResource("weather-summary-api", "Weather Summary API") {Scopes = new[] {"weather-summary-api"}}
             };
 
-        public static IEnumerable<Client> GetClients(string applicationUrlPrefix)
+        public static IEnumerable<Client> GetClients(IConfiguration configuration)
         {
+            var authAdminUrl = configuration.GetServiceUri("auth-admin")!.ToString();
+            var mvcClientUrl = configuration.GetServiceUri("mvc-client")!.ToString();
+            var aureliaClientUrl = configuration.GetServiceUri("aurelia-client")!.ToString();
+
             return new List<Client>
             {
                 // Machine to machine client
@@ -78,10 +83,16 @@ namespace Auth
                     RequirePkce = true,
 
                     // where to redirect to after login
-                    RedirectUris = {$"{applicationUrlPrefix}:44316/signin-oidc"},
+                    RedirectUris =
+                    {
+                        $"{mvcClientUrl}signin-oidc"
+                    },
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = {$"{applicationUrlPrefix}:44316/signout-callback-oidc" },
+                    PostLogoutRedirectUris =
+                    {
+                        $"{mvcClientUrl}signout-callback-oidc"
+                    },
 
                     AllowedScopes = new List<string>
                     {
@@ -105,10 +116,10 @@ namespace Auth
                     RequirePkce = true,
 
                     // where to redirect to after login
-                    RedirectUris = {$"{applicationUrlPrefix}:44344/signin-oidc"},
+                    RedirectUris = {$"{authAdminUrl}signin-oidc"},
 
                     // where to redirect to after logout
-                    PostLogoutRedirectUris = {$"{applicationUrlPrefix}:44344/signout-callback-oidc"},
+                    PostLogoutRedirectUris = {$"{authAdminUrl}signout-callback-oidc"},
 
                     AllowedScopes = new List<string>
                     {
@@ -129,9 +140,9 @@ namespace Auth
                     RequireClientSecret = false,
                     RequireConsent = true,
 
-                    RedirectUris = {$"{applicationUrlPrefix}:44336/login" },
-                    PostLogoutRedirectUris = {$"{applicationUrlPrefix}:44336/" },
-                    AllowedCorsOrigins = {$"{applicationUrlPrefix}:44336" },
+                    RedirectUris = {$"{aureliaClientUrl}login"},
+                    PostLogoutRedirectUris = {aureliaClientUrl},
+                    AllowedCorsOrigins = {aureliaClientUrl.TrimEnd('/')},
 
                     AllowedScopes =
                     {
@@ -163,16 +174,16 @@ namespace Auth
             };
         }
 
-        public static void InitializeDatabase(IApplicationBuilder app, string applicationUrlPrefix)
+        public static void InitializeDatabase(IApplicationBuilder app, IConfiguration configuration)
         {
-            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope();
+            using var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>()!.CreateScope();
 
             var context = serviceScope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();
             context.Database.Migrate();
 
             if (!context.Clients.Any())
             {
-                foreach (var client in GetClients(applicationUrlPrefix))
+                foreach (var client in GetClients(configuration))
                 {
                     context.Clients.Add(client.ToEntity());
                 }

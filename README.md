@@ -22,10 +22,12 @@ This project requires .NET 5.0 SDK or higher.
 
 ### Database connection strings
 
-The default connection string, defined in `appsettings.json` file of both Auth and Auth.Admin projects, assumes that you have SQL Server installed locally, as the default (non-named) instance, and that you will be using `AuthIdentity` as the database. If you have a named instance of SQL Server, or a non-local instance, or need to use another database name, override the setting in the user secrets for both projects:
+If you are running the project with Project Tye or `docker-compose` (see below), SQL Server will be served as a Docker container and you don't need to install anything else (other than Docker itself).
+
+However, if running via IISExpress or Kestrel, the default connection string, defined in `appsettings.json` file of both Auth and Auth.Admin projects, assumes that you have SQL Server installed locally, as the default (non-named) instance, and that you will be using `AuthIdentity` as the database. If you have a named instance of SQL Server, or a non-local instance, or need to use another database name, override the setting in the user secrets for both projects:
 
     "ConnectionStrings": {
-      "DefaultConnection": "Server=.;Database=AuthIdentity;Trusted_Connection=True;MultipleActiveResultSets=true"
+      "auth-db": "Server=.;Database=AuthIdentity;Trusted_Connection=True;MultipleActiveResultSets=true"
     }
 
 ### Google and IdentityServer Demo external providers
@@ -50,7 +52,7 @@ Alternatively, just remove Google (and/or IdentityServer Demo) auth from `Startu
 
 ### Email sending
 
-If you want to have email sending working, you either need to have a local SMTP server, or modify the SMTP settings in `appsettings.json` file of Auth project. The easiest way to have local SMTP server is to use [smtp4dev](https://github.com/rnwood/smtp4dev). Install it with:
+If you running via IISExpress or Kestrel, and want to have email sending working, you either need to have a local SMTP server, or modify the SMTP settings in `appsettings.json` file of Auth project. The easiest way to have local SMTP server is to use [smtp4dev](https://github.com/rnwood/smtp4dev). Install it with:
 
     dotnet tool install -g Rnwood.Smtp4dev
 
@@ -60,7 +62,25 @@ Then run it with:
 
 It will now capture all emails sent from Auth project. You can see them on https://localhost:5001/.
 
+If you are running your app with Project Tye or `docker-compose`, you'll have [MailHog](https://github.com/mailhog/MailHog) started as a service instead. The user interface is available at http://localhost:8025/.
+
 ## Running the solution
+
+This solution is created to be as flexible as possible, by not imposing one way to run it. It can be run from command line, from Visual Studio, using the `docker-compose`, etc. However, the most easier way to run it is with Microsoft Project Tye.
+
+### Using Project Tye
+
+The purpose of Project Tye is to help with development and deployment of .NET microservice solutions. It is still in preview mode, so you can run into some missing pieces. I.e. a user friendly debugging story and integration with IDEs is not yet done. You can find more info in [project documentation on GitHub](https://github.com/dotnet/tye/tree/master/docs).
+
+First, install the [latest version](https://www.nuget.org/packages/Microsoft.Tye) of Project Tye
+
+    dotnet tool install --global Microsoft.Tye --version <version>
+
+Then you can just run Project Tye from the root of the repository.
+
+    tye run
+
+It will run all the projects and services defined in `./tye.yaml` and serve a dashboard on http://localhost:8000/. From the Tye Dashboard, you can see all running services, open URLs in browser, view logs, etc.
 
 ### Using Kestrel or IISExpress
 

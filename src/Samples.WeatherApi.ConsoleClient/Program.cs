@@ -13,7 +13,7 @@ namespace Samples.WeatherApi.ConsoleClient
             // discover endpoints from metadata
             var client = new HttpClient();
 
-            var disco = await client.GetDiscoveryDocumentAsync("https://localhost:44396");
+            var disco = await client.GetDiscoveryDocumentAsync("https://localhost:44350");
             if (disco.IsError)
             {
                 Console.WriteLine(disco.Error);
@@ -42,7 +42,7 @@ namespace Samples.WeatherApi.ConsoleClient
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await apiClient.GetAsync("https://localhost:44373/weatherforecast");
+            var response = await apiClient.GetAsync("https://localhost:44352/weatherforecast");
             if (!response.IsSuccessStatusCode)
             {
                 Console.WriteLine(response.StatusCode);

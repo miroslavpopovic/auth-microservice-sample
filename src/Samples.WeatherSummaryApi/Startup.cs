@@ -22,13 +22,12 @@ namespace Samples.WeatherSummaryApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            var urlPrefix = Configuration.GetValue<string>("ApplicationUrlPrefix");
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
-                    options.Authority = $"{urlPrefix}:44396";
+                    options.Authority = Configuration.GetServiceUri("auth")!.ToString().TrimEnd('/');
                     options.Audience = "weather-summary-api";
 
                     options.BackchannelHttpHandler = new HttpClientHandler
@@ -45,7 +44,7 @@ namespace Samples.WeatherSummaryApi
                         "default", policy =>
                         {
                             policy
-                                .WithOrigins($"{urlPrefix}:44222")
+                                .WithOrigins(Configuration.GetServiceUri("aurelia-client")!.ToString().TrimEnd('/'))
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                         });
@@ -54,7 +53,10 @@ namespace Samples.WeatherSummaryApi
             services
                 .AddHttpClient(
                     "weather-api-client",
-                    client => { client.BaseAddress = new Uri($"{urlPrefix}:44373/weatherforecast"); })
+                    client =>
+                    {
+                        client.BaseAddress = new Uri($"{Configuration.GetServiceUri("weather-api")}weatherforecast");
+                    })
                 .ConfigurePrimaryHttpMessageHandler(
                     () => new HttpClientHandler
                     {

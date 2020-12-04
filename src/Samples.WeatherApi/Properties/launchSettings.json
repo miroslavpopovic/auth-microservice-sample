@@ -4,7 +4,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:7260",
-      "sslPort": 44373
+      "sslPort": 44352
     }
   },
   "$schema": "http://json.schemastore.org/launchsettings.json",
@@ -23,12 +23,12 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:44373;http://localhost:7260"
+      "applicationUrl": "https://localhost:44352;http://localhost:7260"
     },
     "Docker": {
       "commandName": "Docker",
       //"launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "launchUrl": "https://auth.sample.local:44396/weatherforecast",
+      "launchUrl": "https://auth.sample.local:44352/weatherforecast",
       "publishAllPorts": true,
       "useSSL": true
     }

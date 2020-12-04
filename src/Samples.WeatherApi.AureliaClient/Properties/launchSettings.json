@@ -4,7 +4,7 @@
     "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:58173",
-      "sslPort": 44336
+      "sslPort": 44355
     }
   },
   "profiles": {
@@ -20,12 +20,12 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "https://localhost:44336;http://localhost:58173"
+      "applicationUrl": "https://localhost:44355;http://localhost:58173"
     },
     "Docker": {
       "commandName": "Docker",
       //"launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
-      "launchUrl": "https://auth.sample.local:44336/",
+      "launchUrl": "https://auth.sample.local:44355/",
       "publishAllPorts": true,
       "useSSL": true
     }

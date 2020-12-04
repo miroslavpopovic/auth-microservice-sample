@@ -30,7 +30,7 @@ namespace Auth.Admin
 
             services.AddConfigurationDbContext<ConfigurationDbContext>(
                 options => options.ConfigureDbContext = builder =>
-                    builder.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                    builder.UseSqlServer(Configuration.GetConnectionString("auth-db")));
 
             services
                 .AddAuthentication(options =>
@@ -41,7 +41,7 @@ namespace Auth.Admin
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                 {
-                    options.Authority = $"{Configuration.GetValue<string>("ApplicationUrlPrefix")}:44396";
+                    options.Authority = Configuration.GetServiceUri("auth")!.ToString().TrimEnd('/');
 
                     options.ClientId = "auth-admin-client";
                     options.ClientSecret = "secret";

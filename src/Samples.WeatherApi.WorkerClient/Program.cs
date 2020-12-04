@@ -24,7 +24,7 @@ namespace Samples.WeatherApi.WorkerClient
                                 options.Client.Clients.Add(
                                     "auth", new ClientCredentialsTokenRequest
                                     {
-                                        Address = "https://localhost:44396/connect/token",
+                                        Address = "https://localhost:44350/connect/token",
                                         ClientId = "weather-api-worker-client",
                                         ClientSecret = "secret",
                                         Scope = "weather-api"
@@ -41,7 +41,7 @@ namespace Samples.WeatherApi.WorkerClient
                                         TimeSpan.FromSeconds(3)
                                     }));
 
-                    var apiBaseUri = new Uri("https://localhost:44373/");
+                    var apiBaseUri = new Uri("https://localhost:44352/");
 
                     // Register regular HttpClient that knows how to handle tokens
                     services.AddClientAccessTokenClient(

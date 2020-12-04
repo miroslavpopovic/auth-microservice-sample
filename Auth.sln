@@ -24,6 +24,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C8480357-76FA-413B-A7D1-7AF5E7C863C4}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		tye.yaml = tye.yaml
 	EndProjectSection
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{CB1B5CD6-3041-49D8-8F37-23F0F75F2A01}"

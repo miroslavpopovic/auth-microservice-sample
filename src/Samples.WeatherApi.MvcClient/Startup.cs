@@ -29,8 +29,6 @@ namespace Samples.WeatherApi.MvcClient
 
             services.AddControllersWithViews();
 
-            var urlPrefix = Configuration.GetValue<string>("ApplicationUrlPrefix");
-
             services
                 .AddAuthentication(options =>
                 {
@@ -40,7 +38,7 @@ namespace Samples.WeatherApi.MvcClient
                 .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
                     {
-                        options.Authority = $"{urlPrefix}:44396";
+                        options.Authority = Configuration.GetServiceUri("auth")!.ToString().TrimEnd('/');
 
                         options.BackchannelHttpHandler = new HttpClientHandler
                         {
@@ -67,7 +65,7 @@ namespace Samples.WeatherApi.MvcClient
                         options.Client.Clients.Add(
                             "auth", new ClientCredentialsTokenRequest
                             {
-                                Address = $"{urlPrefix}:44396/connect/token",
+                                Address = $"{Configuration.GetServiceUri("auth")}connect/token",
                                 ClientId = "weather-api-mvc-client",
                                 ClientSecret = "secret",
                                 Scope = "weather-api"
@@ -93,7 +91,10 @@ namespace Samples.WeatherApi.MvcClient
             services
                 .AddClientAccessTokenClient(
                     "weather-api-client",
-                    configureClient: client => { client.BaseAddress = new Uri($"{urlPrefix}:44373/"); })
+                    configureClient: client =>
+                    {
+                        client.BaseAddress = new Uri(Configuration.GetServiceUri("weather-api")!.ToString());
+                    })
                 .ConfigurePrimaryHttpMessageHandler(
                     () => new HttpClientHandler
                     {
@@ -104,7 +105,10 @@ namespace Samples.WeatherApi.MvcClient
             services
                 .AddClientAccessTokenClient(
                     "weather-summary-api-client",
-                    configureClient: client => { client.BaseAddress = new Uri($"{urlPrefix}:44303/"); })
+                    configureClient: client =>
+                    {
+                        client.BaseAddress = new Uri(Configuration.GetServiceUri("weather-summary-api")!.ToString());
+                    })
                 .ConfigurePrimaryHttpMessageHandler(
                     () => new HttpClientHandler
                     {

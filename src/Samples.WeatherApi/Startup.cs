@@ -21,13 +21,12 @@ namespace Samples.WeatherApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            var urlPrefix = Configuration.GetValue<string>("ApplicationUrlPrefix");
 
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                     {
-                        options.Authority = $"{urlPrefix}:44396";
+                        options.Authority = Configuration.GetServiceUri("auth")!.ToString().TrimEnd('/');
                         options.Audience = "weather-api";
 
 #if DEBUG
@@ -53,7 +52,7 @@ namespace Samples.WeatherApi
                         "default", policy =>
                         {
                             policy
-                                .WithOrigins($"{urlPrefix}:44336")
+                                .WithOrigins(Configuration.GetServiceUri("aurelia-client")!.ToString().TrimEnd('/'))
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                         });

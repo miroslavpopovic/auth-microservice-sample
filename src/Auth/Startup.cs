@@ -1,3 +1,5 @@
+using System;
+using System.Net;
 using Auth.Data;
 using Auth.Email;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -25,9 +27,14 @@ namespace Auth
         {
             services.AddDatabaseDeveloperPageExceptionFilter();
 
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            var connectionString = Configuration.GetConnectionString("auth-db");
+            Console.WriteLine(connectionString);
+
             services.AddDbContext<ApplicationDbContext>(
-                options =>  options.UseSqlServer(connectionString));
+                options => options.UseSqlServer(connectionString, builder =>
+                {
+                    builder.EnableRetryOnFailure(10, TimeSpan.FromSeconds(30), null);
+                }));
 
             services
                 .AddDefaultIdentity<AuthUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -92,7 +99,7 @@ namespace Auth
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            Config.InitializeDatabase(app, Configuration.GetValue<string>("ApplicationUrlPrefix"));
+            Config.InitializeDatabase(app, Configuration);
 
             if (env.IsDevelopment() || env.IsEnvironment("Docker"))
             {

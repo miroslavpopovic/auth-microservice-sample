@@ -17,10 +17,10 @@ namespace Samples.WeatherApi.MvcClient.Controllers
 
         public WeatherForecastController(IHttpClientFactory clientFactory, IConfiguration configuration)
         {
-            var urlPrefix = configuration.GetValue<string>("ApplicationUrlPrefix");
-
-            _weatherForecastApiUrl = $"{urlPrefix}:44373/weatherforecast";
-            _weatherSummaryApiUrl = $"{urlPrefix}:44303/weathersummary";
+            _weatherForecastApiUrl =
+                $"{configuration.GetServiceUri("weather-api")}weatherforecast";
+            _weatherSummaryApiUrl =
+                $"{configuration.GetServiceUri("weather-summary-api")}weathersummary";
 
             _forecastClient = clientFactory.CreateClient("weather-api-client");
             _summaryClient = clientFactory.CreateClient("weather-summary-api-client");

@@ -5,7 +5,6 @@
 
 @{
     ViewData["Title"] = "Home page";
-    var applicationUrlPrefix = Configuration.GetValue<string>("ApplicationUrlPrefix");
 }
 
 <div>
@@ -13,11 +12,13 @@
     <hr />
     <h2>Launch Auth samples</h2>
     <ul>
-        <li><a href="@applicationUrlPrefix:44396/" target="_blank">Auth</a></li>
-        <li><a href="@applicationUrlPrefix:44344/" target="_blank">Auth.Admin</a></li>
-        <li><a href="@applicationUrlPrefix:44373/weatherforecast" target="_blank">Weather API</a></li>
-        <li><a href="@applicationUrlPrefix:44303/weathersummary" target="_blank">Weather Summary API</a></li>
-        <li><a href="@applicationUrlPrefix:44336/" target="_blank">Aurelia client</a></li>
-        <li><a href="@applicationUrlPrefix:44316/" target="_blank">MVC Client</a></li>
+        <li><a href="@Configuration.GetServiceUri("auth")" target="_blank">Auth</a></li>
+        <li><a href="@Configuration.GetServiceUri("auth-admin")" target="_blank">Auth.Admin</a></li>
+        <li><a href="@Configuration.GetServiceUri("weather-api")weatherforecast" target="_blank">Weather API</a></li>
+        <li><a href="@Configuration.GetServiceUri("weather-summary-api")weathersummary" target="_blank">Weather Summary API</a></li>
+        <li><a href="@Configuration.GetServiceUri("aurelia-client")" target="_blank">Aurelia client</a></li>
+        <li><a href="@Configuration.GetServiceUri("mvc-client")" target="_blank">MVC Client</a></li>
+        <li><a href="https://localhost:5001/" target="_blank">Smtp4Dev (for manual run)</a></li>
+        <li><a href="http://localhost:8025/" target="_blank">MailHog (for Tye and Docker)</a></li>
     </ul>
 </div>

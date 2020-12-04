@@ -1,21 +1,22 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>3e52383b-ec6b-460a-a331-82194fd32e6b</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <UserSecretsId>3e52383b-ec6b-460a-a331-82194fd32e6b</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <DockerfileContext>..\..</DockerfileContext>
+        <ContainerBaseImage>mcr.microsoft.com/dotnet/sdk</ContainerBaseImage>
+        <ContainerBaseTag>5.0-buster</ContainerBaseTag>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="IdentityModel.AspNetCore" Version="3.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" />
-  </ItemGroup>
-
-
+    <ItemGroup>
+        <PackageReference Include="IdentityModel.AspNetCore" Version="3.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Tye.Extensions.Configuration" Version="0.5.0-alpha.20555.1" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
+        <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.0" />
+    </ItemGroup>
 
 </Project>
