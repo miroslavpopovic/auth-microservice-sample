@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using Auth.Data;
 using Auth.Email;
 using Microsoft.AspNetCore.Authentication.Google;

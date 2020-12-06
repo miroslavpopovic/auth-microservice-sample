@@ -2,6 +2,13 @@
 
 This repository contains a sample code for the talk "Building an auth microservice with ASP.NET Core Identity and IdentityServer4".
 
+## Presentations
+
+The presentations are in PowerPoint .pptx format.
+
+- [December 2020, WinDays20](2020-12-windays-building-auth-microservice.pptx)
+- [July 2020, Seavus CodeTalks](2020-07-seavus-codetalks-building-auth-microservice.pptx)
+
 ## Projects
 
 ### Auth
@@ -16,9 +23,37 @@ This is the main project, containing both ASP.NET Core Identity and IdentityServ
 
 The next thing was adding and configuring IdentityServer4, by following [quickstarts](http://docs.identityserver.io/en/latest/quickstarts/0_overview.html).
 
+### Auth.Admin
+
+An ASP.NET Core application that contains administration for IdentityServer4 clients and resources, which are saved to SQL Server database.
+
+### WeatherApi and WeatherSummaryApi
+
+ASP.NET Core API projects (resources), that clients are connecting to. WeatherSummaryApi demonstrates accessing one API from another.
+
+### ConsoleClient
+
+A .NET console application client for WeatherApi. Demonstrates a simple usage of [IdentityModel](https://github.com/IdentityModel).
+
+### WorkerClient
+
+A .NET worker service client for WeatherApi. Demonstrates the usage of IdentityModel's `AccessTokenManagement`, `HttpClientFactory` and strongly-typed `HttpClient`.
+
+### MvcClient
+
+An ASP.NET Core application which demonstrates several different ways of using access tokens to access protected resources (APIs).
+
+### AureliaClient
+
+A combination of ASP.NET Core backend and Aurelia frontend app demonstrating usage of [`oidc-client`](https://github.com/IdentityModel/oidc-client-js). Note that this approach is not recommended. For alternatives, check the latest "best current practice" on [OAuth 2.0 for Browser-Based Apps](https://datatracker.ietf.org/doc/draft-ietf-oauth-browser-based-apps/?include_text=1).
+
+### WpfClient
+
+A .NET Core WPF application demonstrating another usage of IdentityModel, as well as the device flow. It simulates the device without browser (i.e. Smart TV or gaming console) and displays link, code and QR code for device flow auth.
+
 ## Preparing
 
-This project requires .NET 5.0 SDK or higher.
+This solution requires .NET 5.0 SDK or higher.
 
 ### Database connection strings
 

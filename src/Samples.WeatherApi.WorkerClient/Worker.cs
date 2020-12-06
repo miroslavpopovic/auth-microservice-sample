@@ -28,7 +28,7 @@ namespace Samples.WeatherApi.WorkerClient
             {
                 _logger.LogInformation($"Worker running at: {DateTime.Now}");
 
-                var stringResponse = await _regularHttpClient.GetStringAsync("weatherforecast");
+                var stringResponse = await _regularHttpClient.GetStringAsync("weatherforecast", stoppingToken);
                 _logger.LogInformation($"Weather API response: {stringResponse}");
 
                 var weatherForecast =
