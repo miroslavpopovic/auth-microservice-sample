@@ -1,5 +1,7 @@
 # Auth microservice sample
 
+***NOTE: There is [a newer sample](https://github.com/miroslavpopovic/auth-microservice-sample-dotnet6/) with .NET 6 and Duende IdentityServer.***
+
 This repository contains a sample code for the talk "Building an auth microservice with ASP.NET Core Identity and IdentityServer4".
 
 ## Presentations
